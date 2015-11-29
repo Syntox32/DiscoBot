@@ -14,11 +14,10 @@ class MyPlugin(Plugin):
 	title = "Name of my plugin"
 	desc = "What is my purpose?"
 
-	def on_ready(self, client): 
-		pass
-	
-	def on_message(self, client, message):
-		pass
+	def __init__(self): pass
+
+	def on_ready(self, client): pass
+	def on_message(self, client, message): pass
 
 	def on_socket_closed(self,client): pass
 

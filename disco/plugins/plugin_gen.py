@@ -22,23 +22,33 @@
 #def on_voice_state_update(self, member): pass
 
 list = [ 
-    "on_message; message",
+    "on_message;message",
     "on_ready;",
-    "on_message_delete; message",
-    "on_message_edit; before; after",
-    "on_status; member",
-    "on_channel_delete; channel",
-    "on_channel_create; channel",
-    "on_channel_update; channel",
-    "on_member_join; member",
-    "on_member_remove; member",
-    "on_member_update; member",
-    "on_server_create; server",
-    "on_server_delete; server",
-    "on_server_role_create; server; role",
-    "on_server_role_delete; server; role",
-    "on_server_role_update; role",
-    "on_voice_state_update; member" 
+
+    "on_message_delete;message",
+    "on_message_edit;before;after",
+
+    "on_status;member",
+
+    "on_channel_delete;channel",
+    "on_channel_create;channel",
+    "on_channel_update;channel",
+
+    "on_member_join;member",
+    "on_member_remove;member",
+    "on_member_update;member",
+
+    "on_server_join;server",
+    "on_server_remove;server",
+
+    "on_server_role_create;server;role",
+    "on_server_role_delete;server;role",
+    "on_server_role_update;role",
+
+    "on_server_available;server",
+    "on_server_unavailable;server",
+
+    "on_voice_state_update;member" 
 ]
 
 #tem = "[p.%s(self, %s) for p in Plugin.plugins if hasattr(p, \"%s\")]"
