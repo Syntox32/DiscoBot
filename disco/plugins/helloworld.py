@@ -1,5 +1,7 @@
-from config import log
-from plugin import Plugin
+import logging
+from .plugin import Plugin
+
+log = logging.getLogger("discord")
 
 class HelloWorld(Plugin):
 
@@ -20,8 +22,8 @@ class HelloWorld(Plugin):
 			pass
 
 		if message.content.startswith("!fuckoff"):
-			self.send_message(message.channel, "Bye fuckers")
-			self.logout()
+			client.send_message(message.channel, "Bye fuckers")
+			client.logout()
 
 		if message.content.startswith("!sup"):
 			client.send_message(message.channel, "AYYYYLMAO")

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-SlutBot by Syn 
+DiscoBot by Syn 
 	https://github.com/syntox32
 
 Features:
@@ -12,17 +12,16 @@ Discord Python wrapper:
 
 """
 
-import discord, threading, sys
-from config import log, creds
-from plugin import Plugin
-from slutbot import SlutBot
-
-# Load plugins
-from helloworld import HelloWorld
+import threading
+import sys
+import disco
 
 def main():
-	slutbot = SlutBot()
-	slutbot.connect(creds["email"], creds["pass"])
+	bot = disco.DiscoBot()
+	bot.connect(
+		disco.creds["email"],
+		disco.creds["pass"]
+	)
 
 if __name__ == "__main__":
 	try:

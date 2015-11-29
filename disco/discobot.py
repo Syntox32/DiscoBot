@@ -1,8 +1,10 @@
 import discord, threading, sys
-from config import log
-from plugin import Plugin
+from plugins import Plugin
+import logging
 
-class SlutBot(discord.Client):
+log = logging.getLogger("discord")
+
+class DiscoBot(discord.Client):
 	def connect(self, email, password):
 		log.debug("Email: " + email)
 		self.login(email, password)
@@ -12,12 +14,33 @@ class SlutBot(discord.Client):
 			log.error("Login failed.")
 			sys.exit(1)
 
-		self.slutthread = threading.Thread(target=self.run)
-		self.slutthread.daemon = True
-		self.slutthread.start()
+		self.t = threading.Thread(target=self.run)
+		self.t.daemon = True
+		self.t.start()
 
-		log.info("Thread 'slutthread' started.")
-		self.defcon()
+		log.info("Thread 'DiscoBot' started.")
+		
+		while self.is_logged_in:
+			self.defcon()
+
+	def defcon(self):
+		print "command(s): (exit|e) (leave|l) (join <inv>)"
+		cmd = raw_input("> ")
+		if cmd == "e" or cmd == "exit":
+			log.info("Command: " + cmd)
+			log.info("Exiting.")
+			self.logout()
+			sys.exit(1)
+		elif cmd == "leave" or cmd == "l":
+			for s in self.servers:
+				print "Leaving server: " + s.name
+				log.warning("Leaving server: " + s.name)
+				self.leave_server(s)
+		elif cmd.split(" ")[0] == "join":
+			invite = cmd.split(" ")[1]
+			print "Joining server."
+			log.info("Joining server.")
+			self.accept_invite(invite)
 
 	def on_ready(self):
 		print "Connected!"
@@ -113,23 +136,3 @@ class SlutBot(discord.Client):
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_voice_state_update"):
 				plugin.on_voice_state_update(self, member)
-
-	def defcon(self):
-		while True:
-			print "command(s): (exit|e) (leave|l) (join <inv>)"
-			cmd = raw_input("> ")
-			if cmd == "e" or cmd == "exit":
-				log.info("Command: " + cmd)
-				log.info("Exiting.")
-				self.logout()
-				sys.exit(1)
-			elif cmd == "leave" or cmd == "l":
-				for s in self.servers:
-					print "Leaving server: " + s.name
-					log.warning("Leaving server: " + s.name)
-					self.leave_server(s)
-			elif cmd.split(" ")[0] == "join":
-				invite = cmd.split(" ")[1]
-				print "Joining server."
-				log.info("Joining server.")
-				self.accept_invite(invite)

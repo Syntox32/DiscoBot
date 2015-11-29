@@ -1,5 +1,7 @@
-from config import log
-from plugin import Plugin
+import logging
+from .plugin import Plugin
+
+log = logging.getLogger("discord")
 
 class MyPlugin(Plugin):
 	"""

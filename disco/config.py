@@ -1,4 +1,5 @@
-import logging, os
+import logging
+import os
 
 # Setup logging
 
@@ -15,10 +16,10 @@ log.addHandler(handle)
 
 # Get the login credentials
 
-login = os.getenv("SLUTBOT_LOGIN")
+login = os.getenv("DISCOBOT_LOGIN")
 if login is None:
 	log.critical("Could not retrieve login credentials from environment variable. Halting.")
-	raise AttributeError("Environment variable SLUTBOT_LOGIN not set.")
+	raise AttributeError("Environment variable DISCOBOT_LOGIN not set.")
 
 login = login.split(";")
 
