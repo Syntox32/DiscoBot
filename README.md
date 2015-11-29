@@ -31,21 +31,37 @@ Installation
 
 First set an environment variable containing the login credentials for the bot as such
 
+<<<<<<< HEAD
 #### Linux/Unix
+=======
+### Linux/Unix
+>>>>>>> 111ca9982cb585a2a931e0f2e2c2ba6a2b4b70e2
 ```
 export DISCOBOT_LOGIN="<email>;<passwd>"
 ```
 
+<<<<<<< HEAD
 #### Windows
 
 In the windows environment variable editor:
 - add a variable DISCOBOT_LOGIN
 - give it the value `<email>;<passwd>`
+=======
+### Windows
+
+In the windows environment variable editor:
+	1. add a variable DISCOBOT_LOGIN
+	2. give it the value `<email>;<passwd>`
+>>>>>>> 111ca9982cb585a2a931e0f2e2c2ba6a2b4b70e2
 
 **If you are on windows, make sure to run the program as admin**, or else python
 can't retrieve the variable.
 
+<<<<<<< HEAD
 #### Then do the installation.
+=======
+Then do the installation.
+>>>>>>> 111ca9982cb585a2a931e0f2e2c2ba6a2b4b70e2
 
 Download the project and navigate to the folder with `setup.py`. Then run 
 
