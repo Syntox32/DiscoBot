@@ -118,43 +118,35 @@ class Memes(Plugin):
 	desc = "What is my purpose?"
 
 	def __init__(self): pass
-
 	def on_ready(self, client): pass
+
 	def on_message(self, client, message):
-		if message.content.startswith("!meme"):
+		if message.content.startswith("!memelist"):
+			meme = ""
+			for i, m in enumerate(memes):
+				print i
+				meme += str(i) + ": " + m + "\n"
+				if i == int(len(memes) / 2):
+					client.send_message(message.author, meme)
+					meme = ""
+			client.send_message(message.author, meme)
+		elif message.content.startswith("!meme"):
 			rand = random.randint(0, len(memes))
 
 			log.info("random: " + str(rand))
 			me = memes[rand]
 			apimeme = "http://apimeme.com/meme?meme=%s&top=%s&bottom=%s"
-			top = message.content.split("\"")[1]
-			bot = message.content.split("\"")[3]
+			sp = message.content.split("\"")
+
+			index = rand
+			if len(sp[0].split(" ")) > 1 and sp[0].split(" ")[1] != "":
+					index = int(sp[0].split(" ")[1])
+
+			top = sp[1]
+			bot = sp[3]
 			meme = apimeme % (
-				urllib.quote(me),
+				urllib.quote(memes[index]),
 				urllib.quote(top), #message.content.split(";")[0][len("!meme "):]),
 				urllib.quote(bot)) #message.content.split(";")[1]))
 
 			client.send_message(message.channel, meme)
-
-	def on_socket_closed(self,client): pass
-
-	def on_message_delete(self, client, message): pass
-	def on_message_edit(self, client, before, after): pass
-	def on_status(self, client, member): pass
-	
-	def on_channel_delete(self, client, channel): pass
-	def on_channel_create(self, client, channel): pass
-	def on_channel_update(self, client, channel): pass
-	
-	def on_member_join(self, client, member): pass
-	def on_member_remove(self, client, member): pass
-	def on_member_update(self, client, member): pass
-	
-	def on_server_create(self, client, server): pass
-	def on_server_delete(self, client, server): pass
-	
-	def on_server_role_create(self, client, server, role): pass
-	def on_server_role_delete(self, client, server, role): pass
-	def on_server_role_update(self, client, role): pass
-
-	def on_voice_state_update(self, client, member): pass
