@@ -1,23 +1,28 @@
-import discord, os, sys
-import logging
+import logging, os
+
+# Setup logging
+
+level = logging.DEBUG # INFO, WARNING, ERROR
 
 log = logging.getLogger("discord")
-log.setLevel(logging.DEBUG)
+log.setLevel(level)
 
-handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-log.addHandler(handler)
+handle = logging.FileHandler("discord.log", "w", "utf-8")
+fmt = logging.Formatter("%(asctime)s::%(name)s[%(levelname)s]: %(message)s")
 
-creds = os.getenv("SLUTBOT_LOGIN")
-if creds is None:
+handle.setFormatter(fmt)
+log.addHandler(handle)
+
+# Get the login credentials
+
+login = os.getenv("SLUTBOT_LOGIN")
+if login is None:
 	log.critical("Could not retrieve login credentials from environment variable. Halting.")
 	raise AttributeError("Environment variable SLUTBOT_LOGIN not set.")
 
-login = {
-	"email": creds.split(";")[0],
-	"pass": creds.split(";")[1]
-}
+login = login.split(";")
 
-#login = os.getenv("SLUTBOT_LOGIN").split(";")
-#EMAIL = login[0] #os.getenv("SLUTBOT_EMAIL")
-#PASS = login[1] #os.getenv("SLUTBOT_PASS")
+creds = {
+	"email": login[0],
+	"pass": login[1]
+}
