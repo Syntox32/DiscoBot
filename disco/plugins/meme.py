@@ -117,7 +117,7 @@ class Memes(Plugin):
 
 	title = "Such memes, much plugin"
 	desc = "What is my purpose?"
-	commands = [ "!memelist", "!meme <quote> <quote>" ]
+	commands = [ "!lenny", "!memelist", "!meme <quote> <quote>" ]
 
 	def __init__(self): pass
 	def on_ready(self, client): pass
@@ -133,25 +133,30 @@ class Memes(Plugin):
 					meme = ""
 			client.send_message(message.author, meme)
 		elif message.content.startswith("!meme"):
-			rand = random.randint(0, len(memes))
+			try:
+				rand = random.randint(0, len(memes))
 
-			log.info("random: " + str(rand))
-			me = memes[rand]
-			apimeme = "http://apimeme.com/meme?meme=%s&top=%s&bottom=%s"
-			sp = message.content.split("\"")
+				log.info("random: " + str(rand))
+				me = memes[rand]
+				apimeme = "http://apimeme.com/meme?meme=%s&top=%s&bottom=%s"
+				sp = message.content.split("\"")
 
-			index = rand
-			if len(sp[0].split(" ")) > 1 and sp[0].split(" ")[1] != "":
-					index = int(sp[0].split(" ")[1])
+				index = rand
+				if len(sp[0].split(" ")) > 1 and sp[0].split(" ")[1] != "":
+						index = int(sp[0].split(" ")[1])
 
-			top = sp[1]
-			bot = sp[3]
+				top = sp[1]
+				bot = sp[3]
 
-			# the site crashes with anything that is not english
-			safe_chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~"
-			meme = apimeme % (
-				urllib2.quote(memes[index]),
-				urllib2.quote(top.lower().encode("utf-8").replace("æ", "ae").replace("ø", "o").replace("å", "aa")), #message.content.split(";")[0][len("!meme "):]),
-				urllib2.quote(bot.lower().encode("utf-8").replace("æ", "ae").replace("ø", "o").replace("å", "aa"))) # message.content.split(";")[1]))
+				# the site crashes with anything that is not english
+				safe_chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~"
+				meme = apimeme % (
+					urllib2.quote(memes[index]),
+					urllib2.quote(top.lower().encode("utf-8").replace("æ", "ae").replace("ø", "o").replace("å", "aa")), #message.content.split(";")[0][len("!meme "):]),
+					urllib2.quote(bot.lower().encode("utf-8").replace("æ", "ae").replace("ø", "o").replace("å", "aa"))) # message.content.split(";")[1]))
 
-			client.send_message(message.channel, meme)
+				client.send_message(message.channel, meme)
+			except Exception, e:
+				log.exception(e)
+		elif message.content.startswith("!lenny"):
+			client.send_message(message.channel, "( ͡° ͜ʖ ͡°)")

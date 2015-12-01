@@ -45,7 +45,7 @@ class RedditPlugin(Plugin):
 				return
 
 			try:
-				submissions = [s for s in self.reddit.get_subreddit(sub).get_hot(limit=10)]
+				submissions = [s for s in self.reddit.get_subreddit(sub).get_hot(limit=25)]
 				rand = random.randint(0, len(submissions))
 				submission = submissions[rand]
 				client.send_message(message.channel, submission.url)
@@ -55,4 +55,4 @@ class RedditPlugin(Plugin):
 					% message.author.mention())
 				log.info("[%s] User: %s :: Doesn't exist"  % (self.title, message.author.name))
 			except Exception as e:
-				log.warning("[Reddit plugin] Exception: %s" % e.message)
+				log.warning("[Reddit plugin] Exception: %s" % e)

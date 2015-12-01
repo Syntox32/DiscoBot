@@ -3,7 +3,7 @@ from .plugin import Plugin
 
 log = logging.getLogger("discord")
 
-class MyPlugin(Plugin):
+class UtilityPlugin(Plugin):
 	"""
 	Plugin template class
 
@@ -18,7 +18,9 @@ class MyPlugin(Plugin):
 	def __init__(self): pass
 
 	def on_ready(self, client): pass
-	def on_message(self, client, message): pass
+	def on_message(self, client, message):
+		if message.content.startswith("!"):
+			pass
 
 	def on_socket_closed(self,client): pass
 
