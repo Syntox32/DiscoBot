@@ -3,7 +3,7 @@ import os
 
 # Setup logging
 
-level = logging.DEBUG # INFO, WARNING, ERROR
+level = logging.INFO #DEBUG # INFO, WARNING, ERROR
 
 log = logging.getLogger("discord")
 log.setLevel(level)

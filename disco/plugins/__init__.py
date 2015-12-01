@@ -4,3 +4,4 @@ from .plugin import Plugin, PluginMount
 from .helloworld import HelloWorld
 from .greetings import GreetingPlugin
 from .meme import Memes
+from .reddit import RedditPlugin

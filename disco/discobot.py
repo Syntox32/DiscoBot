@@ -58,6 +58,21 @@ class DiscoBot(discord.Client):
 				plugin.on_ready(self)
 
 	def on_message(self, message):
+		if message.content.startswith("!help"):
+			commands = []
+			for plugin in Plugin.plugins:
+				if hasattr(plugin, "commands"):
+					commands += plugin.commands
+			if len(commands) > 0:
+				cmd = "\n".join(commands)
+				self.send_message(message.channel, "I'm at your service.\n\n" + cmd)
+		elif message.content.startswith("!plugins"):
+			plugs = ""
+			for plugin in Plugin.plugins:
+				if hasattr(plugin, "title"):
+					plugs += plugin.title + "\n"
+			self.send_message(message.channel, "Here be my plugins, master.\n\n" + plugs)
+
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_message"):
 				plugin.on_message(self, message)

@@ -7,23 +7,24 @@ class HelloWorld(Plugin):
 
 	title = "Hello World"
 	desc = "What is my purpose?"
+	commands = ["!sup", "!fuckoff"]
 
 	def on_ready(self, client):
 		log.info("We're rolling!")
-		print "yay!"
 
 	def on_message(self, client, message):
 		try:
-			log.info(message.author.name)
+			pass
+			#log.info(message.author.name)
 
-			if message.author.id != self.user.id:
-				log.info("well, shit")
+			#if message.author.id != self.user.id:
+				#log.info("well, shit")
 		except Exception, e:
 			pass
 
 		if message.content.startswith("!fuckoff"):
-			client.send_message(message.channel, "Bye fuckers")
-			client.logout()
+			client.send_message(message.channel, "What the fuck did you just say to me you lill shit? " + message.author.mention())
+			#client.logout()
 
 		if message.content.startswith("!sup"):
 			client.send_message(message.channel, "AYYYYLMAO")
