@@ -1,4 +1,5 @@
-import logging, random, requests, urllib
+# -*- coding: utf-8 -*-
+import logging, random, requests, urllib2
 from .plugin import Plugin
 
 log = logging.getLogger("discord")
@@ -116,6 +117,7 @@ class Memes(Plugin):
 
 	title = "Such memes, much plugin"
 	desc = "What is my purpose?"
+	commands = [ "!memelist", "!meme <quote> <quote>" ]
 
 	def __init__(self): pass
 	def on_ready(self, client): pass
@@ -144,9 +146,12 @@ class Memes(Plugin):
 
 			top = sp[1]
 			bot = sp[3]
+
+			# the site crashes with anything that is not english
+			safe_chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~"
 			meme = apimeme % (
-				urllib.quote(memes[index]),
-				urllib.quote(top), #message.content.split(";")[0][len("!meme "):]),
-				urllib.quote(bot)) #message.content.split(";")[1]))
+				urllib2.quote(memes[index]),
+				urllib2.quote(top.lower().encode("utf-8").replace("æ", "ae").replace("ø", "o").replace("å", "aa")), #message.content.split(";")[0][len("!meme "):]),
+				urllib2.quote(bot.lower().encode("utf-8").replace("æ", "ae").replace("ø", "o").replace("å", "aa"))) # message.content.split(";")[1]))
 
 			client.send_message(message.channel, meme)
