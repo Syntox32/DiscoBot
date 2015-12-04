@@ -33,14 +33,15 @@ First set an environment variable containing the login credentials for the bot a
 
 #### Linux/Unix
 ```
-export DISCOBOT_LOGIN="<email>;<passwd>"
+export DISCOBOT_EMAIL=<email>
+export DISCOBOT_PASS=<passwd>
 ```
 
 #### Windows
 
 In the windows environment variable editor:
-- add a variable DISCOBOT_LOGIN
-- give it the value `<email>;<passwd>`
+- add two variables `DISCOBOT_EMAIL` and `DISCOBOT_PASS`
+- give them the appropriate values
 
 **If you are on windows, make sure to run the program as admin**, or else python
 can't retrieve the variable.
