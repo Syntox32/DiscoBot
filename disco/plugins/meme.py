@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from .plugin import Plugin
-
 import random, requests, urllib, os
-from imgflip import PASS, USER
 
 log = logging.getLogger("discord")
 
