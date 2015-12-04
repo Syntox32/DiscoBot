@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
-import logging, random, requests, urllib2
+import logging
 from .plugin import Plugin
+
+import random, requests, urllib, os
+from imgflip import PASS, USER
 
 log = logging.getLogger("discord")
 
-memes = [
+IMGFLIP_USER = os.getenv("IMGFLIP_USER")
+IMGFLIP_PASS = os.getenv("IMGFLIP_PASS")
+
+meme_names = [
 "One Does Not Simply",
 "Batman Slapping Robin",
 "The Most Interesting Man In The World",
@@ -107,6 +113,8 @@ memes = [
 "Dwight Schrute",
 ]
 
+memes = ["61579","438680","61532","101470","61520","347390","5496396","61546","61539","16464531","61527","61582","563423","61585","101288","61544","405658","1509839","8072285","100947","1035805","61533","245898","9440985","14230520","21735","259680","235589","40945639","61516","444501","61580","97984","101287","6235864","100955","442575","109765","61556","124212","101711","13757816","922147","101511","101440","12403754","101716","1790995","195389","61583","61581","718432","766986","15878567","100952","172314","21604248","673439","1367068","61522","13424299","228024","389834","1366993","11557802","61584","6531067","17699","10628640","1232104","163573","17496002","101462","371382","412211","356615","409403","265789","401687","146381","100948","8774527","681831","176908","23909796","27920","19194965","7761261","18594762","1202623","516587","306319","107773","19209570","646581","17258777","1232147","61554","460541","53764"]
+
 class Memes(Plugin):
 	"""
 	Plugin template class
@@ -117,46 +125,75 @@ class Memes(Plugin):
 
 	title = "Such memes, much plugin"
 	desc = "What is my purpose?"
-	commands = [ "!lenny", "!memelist", "!meme <quote> <quote>" ]
+	commands = [ "!lenny", "!memelist", "!meme <id>(optional) <quote> <quote>" ]
 
 	def __init__(self): pass
 	def on_ready(self, client): pass
 
+	def _request_meme(self, top, bot, tem_id=None):
+		meme = ""
+		if tem_id is not None and tem_id >= 0 and tem_id <= len(memes):
+			meme = memes[tem_id]
+		else:
+			rand = random.randint(0, len(memes))
+			meme = memes[rand]
+		try:
+			r = requests.post("https://api.imgflip.com/caption_image",
+				data = {
+					"template_id": meme, 
+					"text0": top, 
+					"text1": bot,
+					"username": IMGFLIP_USER,
+					"password": IMGFLIP_PASS
+				})
+			succ = bool(r.json()["success"])
+			if succ:
+				print r.json()["data"]["url"]
+				return r.json()["data"]["url"]
+			else:
+				return None
+		except Exception, e:
+			log.exception(e)
+			return None
+
 	def on_message(self, client, message):
 		if message.content.startswith("!memelist"):
+			"""
+			Sends a direct message to the author with a list of
+			all the available memes
+			"""
 			meme = ""
-			for i, m in enumerate(memes):
-				print i
+			for i, m in enumerate(meme_names):
 				meme += str(i) + ": " + m + "\n"
 				if i == int(len(memes) / 2):
 					client.send_message(message.author, meme)
 					meme = ""
 			client.send_message(message.author, meme)
 		elif message.content.startswith("!meme"):
+			"""
+			Returns an image url with a meme given top and bot text
+
+			!meme <id>(optional) <quote> <quote>
+			"""
 			try:
-				rand = random.randint(0, len(memes))
-
-				log.info("random: " + str(rand))
-				me = memes[rand]
-				apimeme = "http://apimeme.com/meme?meme=%s&top=%s&bottom=%s"
 				sp = message.content.split("\"")
+				tem_id = None
 
-				index = rand
+				# if we are given an id, use it
 				if len(sp[0].split(" ")) > 1 and sp[0].split(" ")[1] != "":
-						index = int(sp[0].split(" ")[1])
+						tem_id = int(sp[0].split(" ")[1])
 
 				top = sp[1]
 				bot = sp[3]
-
-				# the site crashes with anything that is not english
-				safe_chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~"
-				meme = apimeme % (
-					urllib2.quote(memes[index]),
-					urllib2.quote(top.lower().encode("utf-8").replace("æ", "ae").replace("ø", "o").replace("å", "aa")), #message.content.split(";")[0][len("!meme "):]),
-					urllib2.quote(bot.lower().encode("utf-8").replace("æ", "ae").replace("ø", "o").replace("å", "aa"))) # message.content.split(";")[1]))
-
-				client.send_message(message.channel, meme)
+				url = self._request_meme(top, bot, tem_id)
+				if url is None:
+					client.send_message(message.channel, "Something went wrong, check the logs, master")
+				else:
+					client.send_message(message.channel, url)
 			except Exception, e:
 				log.exception(e)
 		elif message.content.startswith("!lenny"):
+			"""
+			Prints a lenny face, cause I can
+			"""
 			client.send_message(message.channel, "( ͡° ͜ʖ ͡°)")
