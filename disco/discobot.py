@@ -65,7 +65,8 @@ class DiscoBot(discord.Client):
 					commands += plugin.commands
 			if len(commands) > 0:
 				cmd = "\n".join(commands)
-				self.send_message(message.channel, "I'm at your service.\n\n" + cmd)
+				self.send_message(message.channel, "I'm at your service.\n\n" + cmd + \
+					"\n\nCreated by Syntox <https://github.com/Syntox32/DiscoBot>")
 		elif message.content.startswith("!plugins"):
 			plugs = ""
 			for plugin in Plugin.plugins:
