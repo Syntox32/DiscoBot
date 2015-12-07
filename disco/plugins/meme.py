@@ -23,7 +23,16 @@ class Memes(Plugin):
 	commands = [ "!lenny", "!memelist", "!meme <id>(optional) <quote> <quote>" ]
 
 	def __init__(self): pass
-	def on_ready(self, client): pass
+	def on_ready(self, client):
+		# get the default text-channel
+		channel = member.server.get_default_channel()
+		self.imgflip_login = True
+
+		if IMGFLIP_PASS is None or IMGFLIP_USER is None:
+			client.send_message(channel, "Heads up, environment variable IMGFLIP_USER and IMGFLIP_PASS" + \
+				" is not set for plugin 'Memes'.\n\nYou will not be able do make dank memes before" + \
+				" these have been configured, master.")
+			self.imgflip_login = False
 
 	def _request_meme(self, top, bot, tem_id=None):
 		meme = ""
@@ -74,6 +83,10 @@ class Memes(Plugin):
 
 			!meme <id>(optional) <quote> <quote>
 			"""
+			if not self.imgflip_login:
+				# can't make dank memes without an account
+				return
+
 			try:
 				sp = message.content.split("\"")
 				tem_id = None
