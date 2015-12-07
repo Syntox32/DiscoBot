@@ -60,22 +60,29 @@ class DiscoBot(discord.Client):
 				plugin.on_ready(self)
 
 
-
 	def on_message(self, message):
 		if message.content.startswith("!list"):
 			commands = []
 			for plugin in Plugin.plugins:
 				if hasattr(plugin, "commands"):
-					commands += plugin.commands
+					for c in plugin.commands:
+						s = c.split("::")
+						cmd = s[0].strip()
+						desc = ""
+						if len(s) > 1:
+							desc = " *%s*" % s[1].strip()
+						commands.append("`%s`%s" % (cmd, desc))
 			if len(commands) > 0:
 				cmd = "\n".join(commands)
 				self.send_message(message.channel, "I'm at your service.\n\n%s" % cmd)
+
 		elif message.content.startswith("!plugins"):
 			plugs = ""
 			for plugin in Plugin.plugins:
 				if hasattr(plugin, "title"):
 					plugs += plugin.title + "\n"
 			self.send_message(message.channel, "Here be my plugins, master.\n\n" + plugs)
+
 		elif message.content.startswith("!help"):
 			credit = "DiscoBot v%s by Syntox <https://github.com/Syntox32/DiscoBot>" % version
 			self.send_message(message.channel, credit + "\n\nType `!list` to show all commands")
@@ -93,7 +100,6 @@ class DiscoBot(discord.Client):
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_message_edit"):
 				plugin.on_message_edit(self, before,after)
-
 
 
 	def on_status(self, member):
@@ -118,7 +124,6 @@ class DiscoBot(discord.Client):
 				plugin.on_channel_update(self, channel)
 
 
-
 	def on_member_join(self, member):
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_member_join"):
@@ -133,7 +138,6 @@ class DiscoBot(discord.Client):
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_member_update"):
 				plugin.on_member_update(self, member)
-
 
 
 	def on_server_join(self, server):
@@ -170,7 +174,6 @@ class DiscoBot(discord.Client):
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_server_unavailable"):
 				plugin.on_server_unavailable(self, server)
-
 
 
 	def on_voice_state_update(self, member):
