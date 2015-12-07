@@ -1,13 +1,24 @@
 from setuptools import setup
+from disco.config import version
+
+lines = []
+with open("requirements.txt") as f:
+	lines = f.read().splitlines()
+	
+# Remove comments and empty lines
+reqs = [s for s in lines if not s.startswith("#") and s != ""]
 
 setup(
-	name="DiscoBot",
-	version="0.1.0",
-	description="A simple plugin-based bot for Discord",
 	author="syntox",
 	author_email="syntox32@gmail.com",
 	url="https://github.com/syntox32/discobot",
-	include_package_data=True,
+	
+	name="DiscoBot",
 	packages=["disco"],
-	scripts=["bin/discobot.sh", "bin/start-disco.py"]
+	version=version,
+	description="A simple plugin-based bot for Discord",
+	
+	install_requires=reqs,
+	include_package_data=True,
+	scripts=["scripts/disco.py"]
 )
