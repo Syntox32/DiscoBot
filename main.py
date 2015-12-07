@@ -1,27 +1,20 @@
 #!/usr/bin/python
 """
-DiscoBot by Syn 
+DiscoBot by Syntox
 	https://github.com/syntox32
 
-Features:
-- Says Hello
-
 Discord Python wrapper:
-	https://github.com/Rapptz/discord.py
-	rapptz.github.io/discord.py/api.html
+	GitHub: https://github.com/Rapptz/discord.py
+	API Docs: rapptz.github.io/discord.py/api.html
 
 """
 
-import threading
-import sys
-import disco
+import threading, sys, disco
 
 def main():
 	bot = disco.DiscoBot()
-	bot.connect(
-		disco.creds["email"],
-		disco.creds["pass"]
-	)
+	bot.connect(disco.creds["email"], 
+		disco.creds["pass"])
 
 if __name__ == "__main__":
 	try:
