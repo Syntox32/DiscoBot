@@ -13,15 +13,37 @@ class UtilityPlugin(Plugin):
 
 	title = "Name of my plugin"
 	desc = "What is my purpose?"
-	commands = []
+	commands = [
+		"!regret :: clears the last message by Disco"
+		]
 
 	def __init__(self): pass
 
 	def on_ready(self, client): pass
 	def on_message(self, client, message):
-		if message.content.startswith("!"):
-			pass
-			
+
+		if message.content.startswith("!regret"):
+			msg_q = client.messages
+			# check if the member has permissions to edit messages
+			# useful if you want to keep people from spaming
+			#can_edit = self._check_can_member_edit(message.author)
+
+			while len(msg_q) != 0:
+				m = msg_q.pop()
+				is_disco = client.user.name.lower() == m.author.name.lower()
+				same_channel = m.channel.id == message.channel.id
+				if is_disco and same_channel: # can_edit
+					client.edit_message(m, "<snipped by %s>" % message.author.mention())
+					break
+
+	def _check_can_member_edit(self, member):
+		roles = member.roles
+		for r in roles:
+			p = r.permissions
+			if p.can_manage_messages:
+				return True
+		return False
+
 	def on_message_delete(self, client, message): pass
 	def on_message_edit(self, client, before, after): pass
 
