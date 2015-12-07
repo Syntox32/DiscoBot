@@ -1,1 +1,10 @@
+# Essentials
 discord.py==0.9.0
+
+# Required by plugins 
+
+# meme.py
+requests==2.8.1
+
+# reddit.py
+praw==3.3.0
