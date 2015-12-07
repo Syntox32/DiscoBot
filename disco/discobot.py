@@ -1,10 +1,12 @@
 import discord, threading, sys
 from plugins import Plugin
+from config import version
 import logging
 
 log = logging.getLogger("discord")
 
 class DiscoBot(discord.Client):
+
 	def connect(self, email, password):
 		log.debug("Email: " + email)
 		self.login(email, password)
@@ -57,22 +59,26 @@ class DiscoBot(discord.Client):
 			if hasattr(plugin, "on_ready"):
 				plugin.on_ready(self)
 
+
+
 	def on_message(self, message):
-		if message.content.startswith("!help"):
+		if message.content.startswith("!list"):
 			commands = []
 			for plugin in Plugin.plugins:
 				if hasattr(plugin, "commands"):
 					commands += plugin.commands
 			if len(commands) > 0:
 				cmd = "\n".join(commands)
-				self.send_message(message.channel, "I'm at your service.\n\n" + cmd + \
-					"\n\nCreated by Syntox <https://github.com/Syntox32/DiscoBot>")
+				self.send_message(message.channel, "I'm at your service.\n\n%s" % cmd)
 		elif message.content.startswith("!plugins"):
 			plugs = ""
 			for plugin in Plugin.plugins:
 				if hasattr(plugin, "title"):
 					plugs += plugin.title + "\n"
 			self.send_message(message.channel, "Here be my plugins, master.\n\n" + plugs)
+		elif message.content.startswith("!help"):
+			credit = "DiscoBot v%s by Syntox <https://github.com/Syntox32/DiscoBot>" % version
+			self.send_message(message.channel, credit + "\n\nType `!list` to show all commands")
 
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_message"):
@@ -86,12 +92,15 @@ class DiscoBot(discord.Client):
 	def on_message_edit(self, before, after):
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_message_edit"):
-				plugin.on_message_edit(self, before, after)
+				plugin.on_message_edit(self, before,after)
+
+
 
 	def on_status(self, member):
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_status"):
 				plugin.on_status(self, member)
+
 
 	def on_channel_delete(self, channel):
 		for plugin in Plugin.plugins:
@@ -108,6 +117,8 @@ class DiscoBot(discord.Client):
 			if hasattr(plugin, "on_channel_update"):
 				plugin.on_channel_update(self, channel)
 
+
+
 	def on_member_join(self, member):
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_member_join"):
@@ -123,30 +134,44 @@ class DiscoBot(discord.Client):
 			if hasattr(plugin, "on_member_update"):
 				plugin.on_member_update(self, member)
 
-	def on_server_create(self, server):
-		for plugin in Plugin.plugins:
-			if hasattr(plugin, "on_server_create"):
-				plugin.on_server_create(self, server)
 
-	def on_server_delete(self, server):
+
+	def on_server_join(self, server):
 		for plugin in Plugin.plugins:
-			if hasattr(plugin, "on_server_delete"):
-				plugin.on_server_delete(self, server)
+			if hasattr(plugin, "on_server_join"):
+				plugin.on_server_join(self, server)
+
+	def on_server_remove(self, server):
+		for plugin in Plugin.plugins:
+			if hasattr(plugin, "on_server_remove"):
+				plugin.on_server_remove(self, server)
 
 	def on_server_role_create(self, server, role):
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_server_role_create"):
-				plugin.on_server_role_create(self, server, role)
+				plugin.on_server_role_create(self, server,role)
 
 	def on_server_role_delete(self, server, role):
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_server_role_delete"):
-				plugin.on_server_role_delete(self, server, role)
+				plugin.on_server_role_delete(self, server,role)
 
 	def on_server_role_update(self, role):
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_server_role_update"):
 				plugin.on_server_role_update(self, role)
+
+	def on_server_available(self, server):
+		for plugin in Plugin.plugins:
+			if hasattr(plugin, "on_server_available"):
+				plugin.on_server_available(self, server)
+
+	def on_server_unavailable(self, server):
+		for plugin in Plugin.plugins:
+			if hasattr(plugin, "on_server_unavailable"):
+				plugin.on_server_unavailable(self, server)
+
+
 
 	def on_voice_state_update(self, member):
 		for plugin in Plugin.plugins:
