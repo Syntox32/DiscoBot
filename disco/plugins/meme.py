@@ -8,110 +8,6 @@ log = logging.getLogger("discord")
 IMGFLIP_USER = os.getenv("IMGFLIP_USER")
 IMGFLIP_PASS = os.getenv("IMGFLIP_PASS")
 
-meme_names = [
-"One Does Not Simply",
-"Batman Slapping Robin",
-"The Most Interesting Man In The World",
-"Ancient Aliens",
-"Futurama Fry",
-"X, X Everywhere",
-"Leonardo Dicaprio Cheers",
-"Brace Yourselves X is Coming",
-"First World Problems",
-"But Thats None Of My Business",
-"Y U No",
-"Creepy Condescending Wonka",
-"Bad Luck Brian",
-"That Would Be Great",
-"Success Kid",
-"Third World Skeptical Kid",
-"Grumpy Cat",
-"Captain Picard Facepalm",
-"Doge",
-"Matrix Morpheus",
-"Boardroom Meeting Suggestion",
-"X All The Y",
-"Picard Wtf",
-"Face You Make Robert Downey Jr",
-"Black Girl Wat",
-"The Rock Driving",
-"Am I The Only One Around Here",
-"Evil Toddler",
-"Dr Evil Laser",
-"Philosoraptor",
-"Maury Lie Detector",
-"Too Damn High",
-"Disaster Girl",
-"Third World Success Kid",
-"Finding Neverland",
-"Confession Bear",
-"Aint Nobody Got Time For That",
-"Ill Just Wait Here",
-"Grandma Finds The Internet",
-"Say That Again I Dare You",
-"Awkward Moment Sealion",
-"Skeptical Baby",
-"Dont You Squidward",
-"Laughing Men In Suits",
-"10 Guy",
-"Yo Dawg Heard You",
-"And everybody loses their minds",
-"Bad Pun Dog",
-"Sparta Leonidas",
-"Conspiracy Keanu",
-"Put It Somewhere Else Patrick",
-"Back In My Day",
-"Aaaaand Its Gone",
-"Confused Gandalf",
-"Kill Yourself Guy",
-"Overly Attached Girlfriend",
-"Scumbag Steve",
-"Mugatu So Hot Right Now",
-"You The Real MVP",
-"I Should Buy A Boat Cat",
-"Yall Got Any More Of",
-"Liam Neeson Taken",
-"Ryan Gosling",
-"Spiderman Computer Desk",
-"Rick and Carl",
-"Socially Awesome Awkward Penguin",
-"See Nobody Cares",
-"Buddy Christ",
-"Imagination Spongebob",
-"Pepperidge Farm Remembers",
-"Leonardo Dicaprio Wolf Of Wall Street",
-"Archer",
-"Ermahgerd Berks",
-"Jackie Chan WTF",
-"Simba Shadowy Place",
-"Peter Griffin News",
-"Kevin Hart The Hell",
-"Sudden Clarity Clarence",
-"Angry Baby",
-"So I Got That Goin For Me Which Is Nice",
-"Obi Wan Kenobi",
-"Gollum",
-"Shut Up And Take My Money Fry",
-"Satisfied Seal",
-"Star Wars No",
-"Buddy The Elf",
-"Surprised Koala",
-"Unpopular Opinion Puffin",
-"Brian Williams Was There",
-"I Too Like To Live Dangerously",
-"Spiderman Peter Parker",
-"Keep Calm And Carry On Red",
-"Pissed Off Obama",
-"Rick and Carl Long",
-"Ron Burgundy",
-"Look At All These",
-"What Do We Want",
-"Peter Parker Cry",
-"Jack Sparrow Being Chased",
-"Dwight Schrute",
-]
-
-memes = ["61579","438680","61532","101470","61520","347390","5496396","61546","61539","16464531","61527","61582","563423","61585","101288","61544","405658","1509839","8072285","100947","1035805","61533","245898","9440985","14230520","21735","259680","235589","40945639","61516","444501","61580","97984","101287","6235864","100955","442575","109765","61556","124212","101711","13757816","922147","101511","101440","12403754","101716","1790995","195389","61583","61581","718432","766986","15878567","100952","172314","21604248","673439","1367068","61522","13424299","228024","389834","1366993","11557802","61584","6531067","17699","10628640","1232104","163573","17496002","101462","371382","412211","356615","409403","265789","401687","146381","100948","8774527","681831","176908","23909796","27920","19194965","7761261","18594762","1202623","516587","306319","107773","19209570","646581","17258777","1232147","61554","460541","53764"]
 
 class Memes(Plugin):
 	"""
@@ -123,6 +19,7 @@ class Memes(Plugin):
 
 	title = "Such memes, much plugin"
 	desc = "What is my purpose?"
+
 	commands = [ "!lenny", "!memelist", "!meme <id>(optional) <quote> <quote>" ]
 
 	def __init__(self): pass
@@ -130,15 +27,15 @@ class Memes(Plugin):
 
 	def _request_meme(self, top, bot, tem_id=None):
 		meme = ""
-		if tem_id is not None and tem_id >= 0 and tem_id <= len(memes):
-			meme = memes[tem_id]
+		if tem_id is not None and tem_id >= 0 and tem_id <= len(meme_list):
+			meme = meme_list[tem_id]
 		else:
-			rand = random.randint(0, len(memes))
-			meme = memes[rand]
+			rand = random.randint(0, len(meme_list))
+			meme = meme_list[rand]
 		try:
 			r = requests.post("https://api.imgflip.com/caption_image",
 				data = {
-					"template_id": meme, 
+					"template_id": meme["id"], 
 					"text0": top, 
 					"text1": bot,
 					"username": IMGFLIP_USER,
@@ -146,7 +43,7 @@ class Memes(Plugin):
 				})
 			succ = bool(r.json()["success"])
 			if succ:
-				print r.json()["data"]["url"]
+				# print r.json()["data"]["url"]
 				return r.json()["data"]["url"]
 			else:
 				return None
@@ -155,18 +52,22 @@ class Memes(Plugin):
 			return None
 
 	def on_message(self, client, message):
+
 		if message.content.startswith("!memelist"):
 			"""
 			Sends a direct message to the author with a list of
 			all the available memes
 			"""
-			meme = ""
-			for i, m in enumerate(meme_names):
-				meme += str(i) + ": " + m + "\n"
-				if i == int(len(memes) / 2):
-					client.send_message(message.author, meme)
-					meme = ""
-			client.send_message(message.author, meme)
+			output = ""
+			meme_len = len(meme_list)
+			
+			for i in range(0, meme_len):
+				output += "dbg %d: %s\n" % (i + 1, meme_list[i]["name"])
+				if i == int(meme_len / 2):
+					client.send_message(message.author, output)
+					output = ""
+			client.send_message(message.author, output)
+
 		elif message.content.startswith("!meme"):
 			"""
 			Returns an image url with a meme given top and bot text
@@ -179,7 +80,7 @@ class Memes(Plugin):
 
 				# if we are given an id, use it
 				if len(sp[0].split(" ")) > 1 and sp[0].split(" ")[1] != "":
-						tem_id = int(sp[0].split(" ")[1])
+						tem_id = int(sp[0].split(" ")[1]) - 1
 
 				top = sp[1]
 				bot = sp[3]
@@ -187,11 +88,315 @@ class Memes(Plugin):
 				if url is None:
 					client.send_message(message.channel, "Something went wrong, check the logs, master")
 				else:
-					client.send_message(message.channel, url)
+					client.send_message(message.channel, "dbg " + url)
 			except Exception, e:
 				log.exception(e)
+
 		elif message.content.startswith("!lenny"):
 			"""
 			Prints a lenny face, cause I can
 			"""
 			client.send_message(message.channel, "( ͡° ͜ʖ ͡°)")
+			
+
+meme_list = [{
+				"id": "61579",
+				"name": "One Does Not Simply"
+			}, {
+				"id": "438680",
+				"name": "Batman Slapping Robin"
+			}, {
+				"id": "61532",
+				"name": "The Most Interesting Man In The World"
+			}, {
+				"id": "101470",
+				"name": "Ancient Aliens"
+			}, {
+				"id": "61520",
+				"name": "Futurama Fry"
+			}, {
+				"id": "347390",
+				"name": "X, X Everywhere"
+			}, {
+				"id": "5496396",
+				"name": "Leonardo Dicaprio Cheers"
+			}, {
+				"id": "61546",
+				"name": "Brace Yourselves X is Coming"
+			}, {
+				"id": "61539",
+				"name": "First World Problems"
+			}, {
+				"id": "16464531",
+				"name": "But Thats None Of My Business"
+			}, {
+				"id": "61527",
+				"name": "Y U No"
+			}, {
+				"id": "61582",
+				"name": "Creepy Condescending Wonka"
+			}, {
+				"id": "563423",
+				"name": "That Would Be Great"
+			}, {
+				"id": "61585",
+				"name": "Bad Luck Brian"
+			}, {
+				"id": "101288",
+				"name": "Third World Skeptical Kid"
+			}, {
+				"id": "61544",
+				"name": "Success Kid"
+			}, {
+				"id": "405658",
+				"name": "Grumpy Cat"
+			}, {
+				"id": "8072285",
+				"name": "Doge"
+			}, {
+				"id": "1509839",
+				"name": "Captain Picard Facepalm"
+			}, {
+				"id": "100947",
+				"name": "Matrix Morpheus"
+			}, {
+				"id": "1035805",
+				"name": "Boardroom Meeting Suggestion"
+			}, {
+				"id": "61533",
+				"name": "X All The Y"
+			}, {
+				"id": "245898",
+				"name": "Picard Wtf"
+			}, {
+				"id": "9440985",
+				"name": "Face You Make Robert Downey Jr"
+			}, {
+				"id": "14230520",
+				"name": "Black Girl Wat"
+			}, {
+				"id": "21735",
+				"name": "The Rock Driving"
+			}, {
+				"id": "259680",
+				"name": "Am I The Only One Around Here"
+			}, {
+				"id": "235589",
+				"name": "Evil Toddler"
+			}, {
+				"id": "40945639",
+				"name": "Dr Evil Laser"
+			}, {
+				"id": "61516",
+				"name": "Philosoraptor"
+			}, {
+				"id": "444501",
+				"name": "Maury Lie Detector"
+			}, {
+				"id": "61580",
+				"name": "Too Damn High"
+			}, {
+				"id": "97984",
+				"name": "Disaster Girl"
+			}, {
+				"id": "100955",
+				"name": "Confession Bear"
+			}, {
+				"id": "6235864",
+				"name": "Finding Neverland"
+			}, {
+				"id": "101287",
+				"name": "Third World Success Kid"
+			}, {
+				"id": "442575",
+				"name": "Aint Nobody Got Time For That"
+			}, {
+				"id": "109765",
+				"name": "Ill Just Wait Here"
+			}, {
+				"id": "61556",
+				"name": "Grandma Finds The Internet"
+			}, {
+				"id": "124212",
+				"name": "Say That Again I Dare You"
+			}, {
+				"id": "13757816",
+				"name": "Awkward Moment Sealion"
+			}, {
+				"id": "101711",
+				"name": "Skeptical Baby"
+			}, {
+				"id": "922147",
+				"name": "Laughing Men In Suits"
+			}, {
+				"id": "101440",
+				"name": "10 Guy"
+			}, {
+				"id": "101511",
+				"name": "Dont You Squidward"
+			}, {
+				"id": "12403754",
+				"name": "Bad Pun Dog"
+			}, {
+				"id": "101716",
+				"name": "Yo Dawg Heard You"
+			}, {
+				"id": "1790995",
+				"name": "And everybody loses their minds"
+			}, {
+				"id": "195389",
+				"name": "Sparta Leonidas"
+			}, {
+				"id": "61583",
+				"name": "Conspiracy Keanu"
+			}, {
+				"id": "61581",
+				"name": "Put It Somewhere Else Patrick"
+			}, {
+				"id": "718432",
+				"name": "Back In My Day"
+			}, {
+				"id": "766986",
+				"name": "Aaaaand Its Gone"
+			}, {
+				"id": "15878567",
+				"name": "You The Real MVP"
+			}, {
+				"id": "21604248",
+				"name": "Mugatu So Hot Right Now"
+			}, {
+				"id": "100952",
+				"name": "Overly Attached Girlfriend"
+			}, {
+				"id": "673439",
+				"name": "Confused Gandalf"
+			}, {
+				"id": "172314",
+				"name": "Kill Yourself Guy"
+			}, {
+				"id": "1367068",
+				"name": "I Should Buy A Boat Cat"
+			}, {
+				"id": "61522",
+				"name": "Scumbag Steve"
+			}, {
+				"id": "13424299",
+				"name": "Yall Got Any More Of"
+			}, {
+				"id": "228024",
+				"name": "Liam Neeson Taken"
+			}, {
+				"id": "389834",
+				"name": "Ryan Gosling"
+			}, {
+				"id": "1366993",
+				"name": "Spiderman Computer Desk"
+			}, {
+				"id": "11557802",
+				"name": "Rick and Carl"
+			}, {
+				"id": "61584",
+				"name": "Socially Awesome Awkward Penguin"
+			}, {
+				"id": "6531067",
+				"name": "See Nobody Cares"
+			}, {
+				"id": "10628640",
+				"name": "Archer"
+			}, {
+				"id": "17699",
+				"name": "Buddy Christ"
+			}, {
+				"id": "1232104",
+				"name": "Pepperidge Farm Remembers"
+			}, {
+				"id": "163573",
+				"name": "Imagination Spongebob"
+			}, {
+				"id": "17496002",
+				"name": "Leonardo Dicaprio Wolf Of Wall Street"
+			}, {
+				"id": "412211",
+				"name": "Jackie Chan WTF"
+			}, {
+				"id": "371382",
+				"name": "Simba Shadowy Place"
+			}, {
+				"id": "101462",
+				"name": "Ermahgerd Berks"
+			}, {
+				"id": "401687",
+				"name": "Buddy The Elf"
+			}, {
+				"id": "265789",
+				"name": "Kevin Hart The Hell"
+			}, {
+				"id": "409403",
+				"name": "Obi Wan Kenobi"
+			}, {
+				"id": "356615",
+				"name": "Peter Griffin News"
+			}, {
+				"id": "146381",
+				"name": "Angry Baby"
+			}, {
+				"id": "681831",
+				"name": "Gollum"
+			}, {
+				"id": "100948",
+				"name": "Sudden Clarity Clarence"
+			}, {
+				"id": "8774527",
+				"name": "So I Got That Goin For Me Which Is Nice"
+			}, {
+				"id": "176908",
+				"name": "Shut Up And Take My Money Fry"
+			}, {
+				"id": "23909796",
+				"name": "Satisfied Seal"
+			}, {
+				"id": "7761261",
+				"name": "Unpopular Opinion Puffin"
+			}, {
+				"id": "27920",
+				"name": "Surprised Koala"
+			}, {
+				"id": "19194965",
+				"name": "Star Wars No"
+			}, {
+				"id": "1202623",
+				"name": "Keep Calm And Carry On Red"
+			}, {
+				"id": "516587",
+				"name": "Look At All These"
+			}, {
+				"id": "306319",
+				"name": "Pissed Off Obama"
+			}, {
+				"id": "107773",
+				"name": "Spiderman Peter Parker"
+			}, {
+				"id": "18594762",
+				"name": "Brian Williams Was There"
+			}, {
+				"id": "646581",
+				"name": "I Too Like To Live Dangerously"
+			}, {
+				"id": "19209570",
+				"name": "What Do We Want"
+			}, {
+				"id": "460541",
+				"name": "Jack Sparrow Being Chased"
+			}, {
+				"id": "1232147",
+				"name": "Ron Burgundy"
+			}, {
+				"id": "53764",
+				"name": "Peter Parker Cry"
+			}, {
+				"id": "17258777",
+				"name": "Rick and Carl Long"
+			}, {
+				"id": "61554",
+				"name": "Dwight Schrute"
+			}]
