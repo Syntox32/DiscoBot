@@ -1,6 +1,8 @@
 import logging
 import os
 
+version = "0.2.0"
+
 # Setup logging
 
 level = logging.INFO #DEBUG # INFO, WARNING, ERROR
