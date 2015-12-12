@@ -104,7 +104,7 @@ class Memes(Plugin):
 				if url is None:
 					client.send_message(message.channel, "Something went wrong, check the logs, master")
 				else:
-					client.send_message(message.channel, "dbg " + url)
+					client.send_message(message.channel, url)
 			except Exception, e:
 				log.exception(e)
 
