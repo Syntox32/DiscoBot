@@ -11,7 +11,7 @@ class UtilityPlugin(Plugin):
 		http://rapptz.github.io/discord.py/api.html#
 	"""
 
-	title = "Name of my plugin"
+	title = "Utility Plugin"
 	desc = "What is my purpose?"
 	commands = [
 		"!regret :: clears the last message by Disco"
@@ -32,8 +32,10 @@ class UtilityPlugin(Plugin):
 				m = msg_q.pop()
 				is_disco = client.user.name.lower() == m.author.name.lower()
 				same_channel = m.channel.id == message.channel.id
-				if is_disco and same_channel: # can_edit
+				if is_disco and same_channel: # and can_edit
 					client.edit_message(m, "<snipped by %s>" % message.author.mention())
+					prefix = "[%s] User: %s :: Command: '%s'" % (self.title, message.author.name, message.content)
+					log.info(prefix)
 					break
 
 	def _check_can_member_edit(self, member):
