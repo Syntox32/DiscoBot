@@ -105,6 +105,8 @@ class Memes(Plugin):
 					client.send_message(message.channel, "Something went wrong, check the logs, master")
 				else:
 					client.send_message(message.channel, url)
+					prefix = "[%s] User: %s :: Command: '%s'" % (self.title, message.author.name, message.content)
+					log.info(prefix)
 			except Exception, e:
 				log.exception(e)
 
