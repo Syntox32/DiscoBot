@@ -75,7 +75,7 @@ class Memes(Plugin):
 			meme_len = len(meme_list)
 			
 			for i in range(0, meme_len):
-				output += "dbg %d: %s\n" % (i + 1, meme_list[i]["name"])
+				output += "%d: %s\n" % (i + 1, meme_list[i]["name"])
 				if i == int(meme_len / 2):
 					client.send_message(message.author, output)
 					output = ""
