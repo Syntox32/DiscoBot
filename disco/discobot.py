@@ -12,7 +12,7 @@ class DiscoBot(discord.Client):
 		self.login(email, password)
 		
 		if not self.is_logged_in:
-			print "Login failed."
+			print("Login failed.")
 			log.error("Login failed.")
 			sys.exit(1)
 
@@ -26,7 +26,7 @@ class DiscoBot(discord.Client):
 			self.defcon()
 
 	def defcon(self):
-		print "command(s): (exit|e) (leave|l) (join <inv>)"
+		print("command(s): (exit|e) (leave|l) (join <inv>)")
 		cmd = raw_input("> ")
 		if cmd == "e" or cmd == "exit":
 			log.info("Command: " + cmd)
@@ -35,17 +35,17 @@ class DiscoBot(discord.Client):
 			sys.exit(1)
 		elif cmd == "leave" or cmd == "l":
 			for s in self.servers:
-				print "Leaving server: " + s.name
+				print("Leaving server: " + s.name)
 				log.warning("Leaving server: " + s.name)
 				self.leave_server(s)
 		elif cmd.split(" ")[0] == "join":
 			invite = cmd.split(" ")[1]
-			print "Joining server."
+			print("Joining server.")
 			log.info("Joining server.")
 			self.accept_invite(invite)
 
 	def on_ready(self):
-		print "Connected!"
+		print("Connected!")
 
 		log.info(self.user.name + " successfully connected!")
 		log.debug("Username: " + self.user.name)
