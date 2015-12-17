@@ -2,12 +2,12 @@
 
 A simple plugin-based bot for Discord using [discord.py](https://github.com/Rapptz/discord.py). https://discordapp.com/
 
-Features
+## Features
 --------
 - Plugin system
 - It says `AYYLMAO` when you type `!sup` in a discord channel
 
-Plugins
+## Plugins
 -------
 
 Plugins are added in the file `disco/plugins/__init__.py` like this:
@@ -26,8 +26,8 @@ A template plugin can be found in `dicso/plugins/template.py`
 
 An example plugin can be found in `dicso/plugins/helloworld.py` and `dicso/plugins/greetings.py`
 
-Installation
-------------
+Configure
+---------
 
 First set an environment variable containing the login credentials for the bot as such
 
@@ -46,15 +46,36 @@ In the windows environment variable editor:
 **If you are on windows, make sure to run the program as admin**, or else python
 can't retrieve the variable.
 
-#### Then do the installation.
+---
 
-Download the project and navigate to the folder with `setup.py`. Then run 
+If you want to use the `meme.py` plugin you will also have to fill in the these variables.
+```
+IMGFLIP_USER=<imgflip_username>
+IMGFLIP_PASS=<imgflip_password>
+```
+
+## Installation
+
+##### Option one (recommended)
+If you have `pip` and `git` installed and working, it's pretty straight forward.
+
+```
+pip install git+https://github.com/Syntox32/DiscoBot
+```
+
+##### Option two
+
+Download the project in some way (.zip or git), `cd` to the directory and run.
 
 ```
 python setup.py install
 ```
+---
 
-Start the bot by running `discobot start`.
+You can now run the script by typing this in the console of your choice.
+```
+disco.py
+```
 
 Development
 -----------
