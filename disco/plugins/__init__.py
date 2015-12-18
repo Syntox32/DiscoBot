@@ -1,4 +1,8 @@
-from .plugin import Plugin, PluginMount
+#from .plugin import Plugin, PluginMount
+
+#from . import plugin
+#from .plugin import *
+from .plugin import Plugin
 
 # Custom plugins
 from .helloworld import HelloWorld

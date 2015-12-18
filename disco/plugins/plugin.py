@@ -1,5 +1,8 @@
 # a simple Python plugin loading system
 # see https://gist.github.com/will-hart/5899567
+#
+# Modified to work with Python 3
+#
 
 class PluginMount(type):
 	"""
@@ -8,15 +11,12 @@ class PluginMount(type):
 		
 	Acts as a metaclass which creates anything inheriting from Plugin
 	"""
-	def __init__(cls, name, bases, attrs):
+
+	def __init__(cls, name, bases, nmspc):
 		if not hasattr(cls, "plugins"):
 			cls.plugins = []
 		else:
-			cls.register_plugin(cls)
+			cls.plugins.append(cls)
 
-	def register_plugin(cls, plugin):
-		instance = plugin()
-		cls.plugins.append(instance)
-
-class Plugin(object):
-	__metaclass__ = PluginMount
+class Plugin(object, metaclass=PluginMount):
+	title = "__pluginbase__"

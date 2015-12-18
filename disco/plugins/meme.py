@@ -34,7 +34,7 @@ class Memes(Plugin):
 			err_msg = "Heads up, environment variable IMGFLIP_USER and IMGFLIP_PASS" + \
 				" is not set for plugin 'Memes'.\n\nYou will not be able do make dank memes before" + \
 				" these have been configured, master."
-			print err_msg
+			print(err_msg)
 			log.warning(err_msg)
 			self.imgflip_login = False
 
@@ -60,7 +60,7 @@ class Memes(Plugin):
 				return r.json()["data"]["url"]
 			else:
 				return None
-		except Exception, e:
+		except Exception as e:
 			log.exception(e)
 			return None
 

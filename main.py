@@ -20,6 +20,6 @@ if __name__ == "__main__":
 	try:
 		main()
 	except KeyboardInterrupt:
-		print "Interrupted."
+		print("Interrupted.")
 		log.info("KeyboardInterrupt.. exiting.")
 		sys.exit(0)
