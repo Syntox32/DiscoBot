@@ -107,7 +107,7 @@ class Memes(Plugin):
 					client.send_message(message.channel, url)
 					prefix = "[%s] User: %s :: Command: '%s'" % (self.title, message.author.name, message.content)
 					log.info(prefix)
-			except Exception, e:
+			except Exception as e:
 				log.exception(e)
 
 		elif message.content.startswith("!lenny"):
