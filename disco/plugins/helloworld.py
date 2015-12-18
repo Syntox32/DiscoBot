@@ -19,7 +19,7 @@ class HelloWorld(Plugin):
 
 			#if message.author.id != self.user.id:
 				#log.info("well, shit")
-		except Exception, e:
+		except Exception as e:
 			pass
 
 		if message.content.startswith("!fuckoff"):
