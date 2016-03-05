@@ -10,7 +10,7 @@ class DiscoBot(discord.Client):
 	def connect(self, email, password):
 		log.debug("Email: " + email)
 		self.login(email, password)
-		
+
 		if not self.is_logged_in:
 			print "Login failed."
 			log.error("Login failed.")
@@ -21,7 +21,7 @@ class DiscoBot(discord.Client):
 		self.t.start()
 
 		log.info("Thread 'DiscoBot' started.")
-		
+
 		while self.is_logged_in:
 			self.defcon()
 
@@ -54,7 +54,7 @@ class DiscoBot(discord.Client):
 		log.info("Plugins loaded(%i):" % len(Plugin.plugins))
 		for plugin in Plugin.plugins:
 			log.info("..." + plugin.title)
-		
+
 		for plugin in Plugin.plugins:
 			if hasattr(plugin, "on_ready"):
 				plugin.on_ready(self)

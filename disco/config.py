@@ -1,7 +1,7 @@
 import logging
 import os
 
-version = "0.2.0"
+version = "0.4.0-beta"
 
 # Setup logging
 
