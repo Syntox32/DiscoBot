@@ -5,6 +5,7 @@ class Config:
 	Config class used by the the class `DiscoBot`
 	"""
 	VERSION = "0.4.0-beta"
+	OWNER_ID = "88251130613604352"
 
 	LOGGING_LEVEL = logging.DEBUG # DEBUG, INFO, WARNING, ERROR
 	LOGGING_FORMAT = "%(asctime)s::%(name)s [%(levelname)s]: %(message)s"
