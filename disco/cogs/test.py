@@ -5,19 +5,18 @@ TestCog class, showing some basic usage of commands, and available events.
 
 import logging
 
-from ..mixin import CogMixin
-
 from discord import Message, Channel, Member, Server, Role
 from discord.ext import commands
 
 logger = logging.getLogger("disco")
 
-class TestCog(CogMixin):
+class TestCog:
     """
     TestCog for showing basic command and event usage.
     """
     def __init__(self, bot):
-    	self.bot = bot
+        self.bot = bot
+        self.key = self.__class__.__name__
 
     @commands.command(name="helloworld", pass_context=True)
     async def do_thing(self, ctx):

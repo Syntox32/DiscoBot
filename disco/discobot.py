@@ -10,33 +10,30 @@ from .utils import configure_logger
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import Context
 from discord import Message, Channel, Member, Server, Role
 
-logger = configure_logger("disco", stream=True, level=Config.LOGGING_LEVEL)
+configure_logger("disco", stream=True, level=Config.LOGGING_LEVEL)
 configure_logger("discord", stream=False, level=Config.LOGGING_LEVEL)
 
+logger = logging.getLogger("disco")
+
+
 class DiscoBot(commands.Bot):
-	"""
-	DiscoBot the Amazing Chat Companion
-	"""
+	"""DiscoBot the Amazing Chat Companion"""
+
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
-		credentials_error = """Credentials could not be found. Set the
-			credentials as enviornment variables, and try again."""
-
-		if Config.DISCORD_EMAIL is None or Config.DISCORD_PASS is None:
-			logger.error(credentials_error)
-			raise MissingCredentials()
-
-		self.register_cogs()
-		logger.info("Initalized DiscoBot successfully.")
+		missing = Config.DISCORD_EMAIL is None or Config.DISCORD_PASS is None
+		if missing:
+			raise AttributeError("Missing credentials.")
 
 	def go(self):
 		"""Go, go, go"""
 		self.run(Config.DISCORD_EMAIL, Config.DISCORD_PASS)
 
-	def register_extensions(self, extension: List[str]):
+	def register_extensions(self, extension: [str]):
 		"""Register the required cogs"""
 		logger.info("Loading extension...")
 		try:
@@ -64,7 +61,7 @@ extensions = [
 ]
 
 bot = DiscoBot(command_prefix=["!", "?", "$"], description=desc)
-bot.register_extensions(extension)
+bot.register_extensions(extensions)
 
 @bot.event
 async def on_ready():
