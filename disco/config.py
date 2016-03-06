@@ -1,17 +1,16 @@
-import logging
-import os
+import logging, os
 
 version = "0.4.0-beta"
 
 # Setup logging
 
-level = logging.INFO #DEBUG # INFO, WARNING, ERROR
+level = logging.DEBUG #DEBUG # INFO, WARNING, ERROR
 
 log = logging.getLogger("discord")
 log.setLevel(level)
 
 handle = logging.FileHandler("discord.log", "w", "utf-8")
-fmt = logging.Formatter("%(asctime)s::%(name)s[%(levelname)s]: %(message)s")
+fmt = logging.Formatter("%(asctime)s::%(name)s [%(levelname)s]: %(message)s")
 
 handle.setFormatter(fmt)
 log.addHandler(handle)
