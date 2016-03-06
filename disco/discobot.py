@@ -5,7 +5,6 @@ DiscoBot the Amazing Chat Companion
 
 import logging
 from .config import Config
-from .errors import MissingCredentials
 from .utils import configure_logger
 
 import discord
