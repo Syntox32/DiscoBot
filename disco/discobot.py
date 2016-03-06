@@ -58,7 +58,8 @@ List of commands by category:
 
 extensions = [
 	"disco.cogs.meme",
-	"disco.cogs.reddit"
+	"disco.cogs.reddit",
+	"disco.cogs.misc"
 ]
 
 bot = DiscoBot(command_prefix=["!", "?", "$"], description=desc)
