@@ -21,41 +21,34 @@ class TestCog(CogMixin):
 
     # Commands
 
-    @commands.command(name="helloworld",
-        pass_context=True,
-        description="prints a thing to the channel")
+    @commands.command(name="helloworld", pass_context=True)
     async def do_thing(self, ctx):
-        """
-        Simple 'say' command
-        """
+        """Simple 'say' command"""
         await ctx.bot.say("Hello, it's me again.")
 
     # Events
 
-    async def on_ready(self):
-    	"""Called when the client is done preparing the data received from Discord."""
-    	pass
 
     async def on_message(self, message: Message):
-    	"""Called when a message is created and sent to a server."""
-    	pass
+        """Called when a message is created and sent to a server."""
+        pass
 
     async def on_channel_update(self, before: Channel, after: Channel):
-    	"""Called whenever a channel is updated. e.g. changed name, topic, permissions."""
-    	msg = "Channel changed name from {0} to {1}".format(before.name, after.name)
-    	await self.bot.send_message(after, msg)
+        """Called whenever a channel is updated. e.g. changed name, topic, permissions."""
+        msg = "Channel changed name from {0} to {1}".format(before.name, after.name)
+        await self.bot.send_message(after, msg)
 
     async def on_member_update(self, before: Member, after: Member):
-    	"""Called when a Member updates their profile."""
-    	pass
+        """Called when a Member updates their profile."""
+        pass
 
     async def on_server_role_update(self, before: Role, after: Role):
-    	"""Called when a Role is changed server-wide."""
-    	pass
+        """Called when a Role is changed server-wide."""
+        pass
 
     async def on_voice_state_update(self, before: Member, after: Member):
-    	"""Called when a Member changes their voice state."""
-    	pass
+        """Called when a Member changes their voice state."""
+        pass
 
 def setup(bot):
     bot.add_cog(TestCog(bot))
