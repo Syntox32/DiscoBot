@@ -62,6 +62,7 @@ target/
 # Custom files
 .dropbox
 desktop.ini
+testfile.py
 
 # Config files
 settings.py
