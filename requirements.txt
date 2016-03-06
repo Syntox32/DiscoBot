@@ -1,7 +1,9 @@
 # Essentials
-discord.py==0.9.0
+git+https://github.com/Rapptz/discord.py@async
 
-# Required by plugins 
+#
+# Required by plugins
+#
 
 # meme.py
 requests==2.8.1
