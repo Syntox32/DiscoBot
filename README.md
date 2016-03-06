@@ -1,75 +1,58 @@
 # DiscoBot
 
-A simple plugin-based bot for Discord using [discord.py](https://github.com/Rapptz/discord.py). https://discordapp.com/
+A small pluggable bot for Discord using [discord.py](https://github.com/Rapptz/discord.py).
 
-Features
---------
-- Plugin system
-- It says `AYYLMAO` when you type `!sup` in a discord channel
+If you have no clue what Discord is you can go here: https://discordapp.com/
 
-Plugins
--------
+## Features
 
-Plugins are added in the file `disco/plugins/__init__.py` like this:
+Something something useful text
 
-We want to add our plugin with classname `HelloWorld` in file `helloworld.py` as a plugin:
+## Extending functionality
 
+Some text to come here soon
+
+## Credentials
+
+Credentials are set through environment variables.
+
+Name | Value | Type | Plugin
+--- | --- | --- | ---
+**DISCOBOT_EMAIL** | Discord email | Required |
+**DISCOBOT_PASS** | Discord password | Required |
+**IMGFLIP_USER** | [ImgFlip](https://imgflip.com/) username | Optional | meme.py
+**IMGFLIP_PASS** | [ImgFlip](https://imgflip.com/) password | Optional | meme.py
+
+## Installation
+
+Linux is currently the only tested environment.
+
+The bot needs *Python >= v3.5.1* to be able to run, due to the use of `asyncio`.
+
+It's recommended you also use a virtual environment when installing dependencies:
 ```
-[...]
-
-# Custom plugins
-from .helloworld import HelloWorld
-
-```
-
-A template plugin can be found in `dicso/plugins/template.py`
-
-An example plugin can be found in `dicso/plugins/helloworld.py` and `dicso/plugins/greetings.py`
-
-Installation
-------------
-
-First set an environment variable containing the login credentials for the bot as such
-
-#### Linux/Unix
-```
-export DISCOBOT_EMAIL=<email>
-export DISCOBOT_PASS=<passwd>
+$ virtualenv -p python3.5 venv --always-copy
+$ source ./venv/bin/activate
 ```
 
-#### Windows
-
-In the windows environment variable editor:
-- add two variables `DISCOBOT_EMAIL` and `DISCOBOT_PASS`
-- give them the appropriate values
-
-**If you are on windows, make sure to run the program as admin**, or else python
-can't retrieve the variable.
-
-#### Then do the installation.
-
-Download the project and navigate to the folder with `setup.py`. Then run 
-
+You also need to install all the requirements
 ```
-python setup.py install
+$ pip install -r requirements.txt
 ```
 
-Start the bot by running `discobot start`.
+Then run the bot:
+```
+$ python main.py
+```
 
-Development
------------
-Make sure you have `Python 2.7.x` installed.
+## Keeping it online
 
-Run `pip install -r requirements.txt` in the top-directory.
+If you want to run your bot online 24/7 you might consider setting up a [supervisor](http://supervisord.org/) config.
+If you do end up using supervisor, it's worth noting you **must set the credentials inside
+the config**.
 
-Start the bot with `python main.py`
+A sample supervisor config file can be found togheter with this repo.
 
-Requirements
-------------
-The project requires *Python 2.7.x* to be installed
+## License
 
-You will also have intall [discord.py](https://github.com/Rapptz/discord.py) by Rapptz. This can be done by doing `pip install discord.py`
-
-License
--------
 The whole project is licensed under an MIT license.
