@@ -16,7 +16,7 @@ class TestCog(CogMixin):
     """
     TestCog for showing basic command and event usage.
     """
-    def __init__(self, bot=None, *args, **kwargs):
+    def __init__(self, bot):
     	self.bot = bot
 
     # Commands
@@ -56,3 +56,6 @@ class TestCog(CogMixin):
     async def on_voice_state_update(self, before: Member, after: Member):
     	"""Called when a Member changes their voice state."""
     	pass
+
+def setup(bot):
+    bot.add_cog(TestCog(bot))

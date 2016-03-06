@@ -6,13 +6,18 @@ DiscoBot the Amazing Chat Companion
 import logging
 from .config import Config
 from .errors import MissingCredentials
-from .cogs.test import TestCog
+from .utils import configure_logger
 
 import discord
 from discord.ext import commands
 
-logger = logging.getLogger("disco")
+logger = configure_logger("disco", stream=True, level=Config.LOGGING_LEVEL)
+configure_logger("discord", stream=False, level=Config.LOGGING_LEVEL)
 
+instances = [
+	# If you make any new cogs, add them to the list below
+	"disco.cogs.test",
+]
 
 class DiscoBot(commands.Bot):
 	"""
@@ -37,14 +42,11 @@ class DiscoBot(commands.Bot):
 		"""
 		Register the required cogs
 		"""
-		instances = [
-			# If you make any new cogs, add them to the list below
-			TestCog(self)
-		]
 		logger.info("Registering cogs...")
 		for inst in instances:
 			logger.info(" Added cog: {0}".format(type(inst).__name__))
-			self.add_cog(inst)
+			self.load_extension(inst)
+			#self.add_cog(inst)
 
 	async def on_ready(self):
 		"""
