@@ -26,11 +26,11 @@ class RedditPlugin(Plugin):
 
 		if not hasattr(self, "reddit"):
 			self.reddit = praw.Reddit(user_agent="disco-the-amazing-chat-companion")
-		
+
 		if message.content.startswith("!hot"):
 			cmd = message.content.split(" ")
 			if len(cmd) < 2:
-				client.send_message(message.channel, "Want to give me a subreddit, %s?" 
+				client.send_message(message.channel, "Want to give me a subreddit, %s?"
 					% message.author.mention())
 				return
 
@@ -39,7 +39,7 @@ class RedditPlugin(Plugin):
 
 			sub = cmd[1].strip().lower()
 			if sub in blacklist:
-				client.send_message(message.channel, "WHAT THE FUCK %s" 
+				client.send_message(message.channel, "WHAT THE FUCK %s"
 					% message.author.mention())
 				log.info("[%s] User: %s :: %s is blacklisted, perv" % (self.title, message.author.name, sub))
 				return
@@ -51,7 +51,7 @@ class RedditPlugin(Plugin):
 				client.send_message(message.channel, submission.url)
 				log.info("[%s] User: %s :: Success"  % (self.title, message.author.name))
 			except praw.errors.InvalidSubreddit as e:
-				client.send_message(message.channel, "That subreddit doesn't exist, you perv %s" 
+				client.send_message(message.channel, "That subreddit doesn't exist, you perv %s"
 					% message.author.mention())
 				log.info("[%s] User: %s :: Doesn't exist"  % (self.title, message.author.name))
 			except Exception as e:

@@ -57,8 +57,8 @@ List of commands by category:
 """
 
 extensions = [
-	"disco.cogs.test",
 	"disco.cogs.meme",
+	"disco.cogs.reddit"
 ]
 
 bot = DiscoBot(command_prefix=["!", "?", "$"], description=desc)
@@ -119,6 +119,13 @@ async def debug(ctx, *, code : str):
 
 	await bot.say(python.format(result))
 
+@bot.event
+async def on_command_error(error, ctx: Context):
+	"""Called when a command raises an error"""
+
+	if isinstance(error, commands.NoPrivateMessage):
+		await bot.send_message(ctx.message.author,
+		"This command cannot be used in private messages.")
 
 # Other events, uncomment as needed
 # Having them uncommented all the time might
@@ -129,10 +136,6 @@ async def debug(ctx, *, code : str):
 #	"""Override normal error handling behaviour"""
 #	pass
 
-#@bot.event
-#async def on_command_error(error, ctx: Context):
-#	"""Called when a command raises an error"""
-#	pass
 
 #@bot.event
 #async def on_channel_update(before: Channel, after: Channel):

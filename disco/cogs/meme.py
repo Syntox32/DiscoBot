@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-TestCog class, showing some basic usage of commands, and available events.
-"""
 
-import logging, random, requests, json
+import logging, random, json
 import asyncio, aiohttp
 
 from disco.config import Config
@@ -13,9 +10,7 @@ from discord.ext import commands
 logger = logging.getLogger("disco")
 
 class Meme:
-    """
-    TestCog for showing basic command and event usage.
-    """
+
     def __init__(self, bot):
         self.bot = bot
         self.key = self.__class__.__name__
@@ -54,7 +49,10 @@ class Meme:
 
     @commands.command(pass_context=True, no_pm=True)
     async def meme(self, ctx, *args : str):
-        """Post a hot meme with top and bottom text."""
+        """Post a hot meme with top and bottom text.
+
+            ex.: !meme <id>(optional) "top" "bot"
+        """
         new_hot_meme = None
         is_valid = len(args) == 2 or len(args) == 3
         has_id_args = len(args) == 3
