@@ -4,10 +4,11 @@ DiscoBot the Amazing Chat Companion
 """
 
 import logging
+from disco import checks
 from .config import Config
-from .utils import configure_logger
+from .utils import configure_logger, get_destination
 
-import discord
+import discord, asyncio
 from discord.ext import commands
 from discord.ext.commands import Context
 from discord import Message, Channel, Member, Server, Role
@@ -57,6 +58,7 @@ List of commands by category:
 
 extensions = [
 	"disco.cogs.test",
+	"disco.cogs.meme",
 ]
 
 bot = DiscoBot(command_prefix=["!", "?", "$"], description=desc)
@@ -69,20 +71,53 @@ async def on_ready():
 	logger.info("Username: {0}".format(bot.user.name))
 	logger.info("ID: {0}".format(bot.user.id))
 
+	bot.commands_executed = 0
+
 @bot.event
 async def on_command(command, ctx: Context):
 	"""Called whenever a command is called"""
-	pass
+	bot.commands_executed += 1
+	dest = get_destination(ctx.message)
+	logger.info("{0.author.name} in {1}: {0.content}".format(ctx.message, dest))
 
 @bot.event
 async def on_message(message: Message):
 	"""Called when a message is created and sent to a server."""
-	logger.info("loluwot")
 
 	# if we override the on message we need to
 	# make sure the bot sees the message if we want
 	# any other on_message events to fire
 	await bot.process_commands(message)
+
+@bot.command(pass_context=True)
+async def id(ctx):
+	"""Send a message with the user id of the author."""
+	await bot.say("Your user ID is: {0}".format(ctx.message.author.id))
+
+@bot.command(pass_context=True)
+@checks.is_owner()
+async def whoami(ctx):
+	await bot.say("You're the owner!")
+
+@bot.command(pass_context=True, hidden=True)
+@checks.is_owner()
+async def debug(ctx, *, code : str):
+	"""Evaluates code"""
+	# Shamelessly stolen from Danny
+	code = code.strip('` ')
+	python = '```py\n{}\n```'
+	result = None
+
+	try:
+		result = eval(code)
+	except Exception as e:
+		await bot.say(python.format(type(e).__name__ + ': ' + str(e)))
+		return
+
+	if asyncio.iscoroutine(result):
+		result = await result
+
+	await bot.say(python.format(result))
 
 
 # Other events, uncomment as needed

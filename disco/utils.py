@@ -5,6 +5,16 @@ Utillity class with things
 
 import os, logging
 
+from discord import Message
+
+def get_destination(msg: Message):
+    dest = None
+    if msg.channel.is_private:
+        dest  = 'Private Message'
+    else:
+        dest = '#{0.channel.name} ({0.server.name})'.format(msg)
+    return dest
+
 def configure_logger(name=__name__, stream=True, level=logging.INFO):
     """
     Function to quickly help you configure several loggers.
