@@ -1,4 +1,4 @@
-import logging
+import logging, random, os
 from .plugin import Plugin
 
 log = logging.getLogger("discord")
@@ -11,10 +11,11 @@ class UtilityPlugin(Plugin):
 		http://rapptz.github.io/discord.py/api.html#
 	"""
 
-	title = "Name of my plugin"
+	title = "Utility Plugin"
 	desc = "What is my purpose?"
 	commands = [
-		"!regret :: clears the last message by Disco"
+		"!regret :: clears the last message by Disco",
+		"!8ball <question>(optional) :: The magic 8ball gives it's widsom in desperate times"
 		]
 
 	def __init__(self): pass
@@ -23,6 +24,9 @@ class UtilityPlugin(Plugin):
 	def on_message(self, client, message):
 
 		if message.content.startswith("!regret"):
+			"""
+			For when you sit in the front of the classroom
+			"""
 			msg_q = client.messages
 			# check if the member has permissions to edit messages
 			# useful if you want to keep people from spaming
@@ -32,9 +36,28 @@ class UtilityPlugin(Plugin):
 				m = msg_q.pop()
 				is_disco = client.user.name.lower() == m.author.name.lower()
 				same_channel = m.channel.id == message.channel.id
-				if is_disco and same_channel: # can_edit
+				if is_disco and same_channel: # and can_edit
 					client.edit_message(m, "<snipped by %s>" % message.author.mention())
+					prefix = "[%s] User: %s :: Command: '%s'" % (self.title, message.author.name, message.content)
+					log.info(prefix)
 					break
+
+		if message.content.startswith("!8ball"):
+			"""
+			May an object used in pool table make decisions in your life
+			"""
+			try:
+				ran = random.randint(0, len(wisdom) - 1)
+				if not hasattr(self, "_last_random"):
+					self._last_random = ran
+				elif ran == self._last_random:
+					ran = random.randint(0, len(wisdom) - 1)
+				choice = wisdom[ran]
+				client.send_message(message.channel, "%s" % choice)
+				prefix = "[%s] User: %s :: Command: '%s'" % (self.title, message.author.name, message.content)
+				log.info(prefix)
+			except Exception as e:
+				log.warning("[%s] Exception: %s" % (self.title, e))
 
 	def _check_can_member_edit(self, member):
 		roles = member.roles
@@ -44,24 +67,26 @@ class UtilityPlugin(Plugin):
 				return True
 		return False
 
-	def on_message_delete(self, client, message): pass
-	def on_message_edit(self, client, before, after): pass
-
-	def on_status(self, client, member): pass
-	def on_voice_state_update(self, client, member): pass
-
-	def on_member_join(self, client, member): pass
-	def on_member_remove(self, client, member): pass
-	def on_member_update(self, client, member): pass
-
-	def on_channel_delete(self, client, channel): pass
-	def on_channel_create(self, client, channel): pass
-	def on_channel_update(self, client, channel): pass
-
-	def on_server_join(self, client, server): pass
-	def on_server_remove(self, client, server): pass
-	def on_server_role_create(self, client, server, role): pass
-	def on_server_role_delete(self, client, server, role): pass
-	def on_server_role_update(self, client, role): pass
-	def on_server_available(self, client, server): pass
-	def on_server_unavailable(self, client, server): pass
+# https://en.wikipedia.org/wiki/Magic_8-Ball
+wisdom = [
+	"It is certain",
+	"It is decidedly so",
+	"Without a doubt",
+	"Yes, definitely",
+	"You may rely on it",
+	"As I see it, yes",
+	"Most likely",
+	"Outlook good",
+	"Yes",
+	"Signs point to yes",
+	"Reply hazy try again",
+	"Ask again later",
+	"Better not tell you now",
+	"Cannot predict now",
+	"Concentrate and ask again",
+	"Don't count on it",
+	"My reply is no",
+	"My sources say no",
+	"Outlook not so good",
+	"Very doubtful"
+]

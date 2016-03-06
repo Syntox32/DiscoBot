@@ -75,7 +75,7 @@ class Memes(Plugin):
 			meme_len = len(meme_list)
 			
 			for i in range(0, meme_len):
-				output += "dbg %d: %s\n" % (i + 1, meme_list[i]["name"])
+				output += "%d: %s\n" % (i + 1, meme_list[i]["name"])
 				if i == int(meme_len / 2):
 					client.send_message(message.author, output)
 					output = ""
@@ -104,8 +104,15 @@ class Memes(Plugin):
 				if url is None:
 					client.send_message(message.channel, "Something went wrong, check the logs, master")
 				else:
+<<<<<<< HEAD
 					client.send_message(message.channel, "dbg " + url)
 			except Exception as e:
+=======
+					client.send_message(message.channel, url)
+					prefix = "[%s] User: %s :: Command: '%s'" % (self.title, message.author.name, message.content)
+					log.info(prefix)
+			except Exception, e:
+>>>>>>> post-update
 				log.exception(e)
 
 		elif message.content.startswith("!lenny"):

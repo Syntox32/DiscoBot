@@ -1,31 +1,19 @@
-import logging
-import os
+import logging, os
 
-version = "0.3.0"
+class Config:
+	"""
+	Config class used by the the class `DiscoBot`
+	"""
+	VERSION = "0.4.0-beta"
 
-# Setup logging
+	LOGGING_LEVEL = logging.DEBUG # DEBUG, INFO, WARNING, ERROR
+	LOGGING_FORMAT = "%(asctime)s::%(name)s [%(levelname)s]: %(message)s"
 
-level = logging.INFO #DEBUG # INFO, WARNING, ERROR
+	# Discord login
+	DISCORD_EMAIL = os.environ.get("DISCOBOT_EMAIL", None)
+	DISCORD_PASS = os.environ.get("DISCOBOT_PASS", None)
 
-log = logging.getLogger("discord")
-log.setLevel(level)
-
-handle = logging.FileHandler("discord.log", "w", "utf-8")
-fmt = logging.Formatter("%(asctime)s::%(name)s[%(levelname)s]: %(message)s")
-
-handle.setFormatter(fmt)
-log.addHandler(handle)
-
-# Get the login credentials
-
-login_email = os.getenv("DISCOBOT_EMAIL")
-login_pass = os.getenv("DISCOBOT_PASS")
-
-if login_email is None or login_pass is None:
-	log.critical("Could not retrieve login credentials from environment variable. Halting.")
-	raise AttributeError("Environment variable DISCOBOT_PASS and/or DISCOBOT_EMAIL not set.")
-
-creds = {
-	"email": login_email,
-	"pass": login_pass
-}
+	# Imgflip login, used by `plugins/meme.py`
+	# If these are not the the plugin will just be disabled
+	IMGFLIP_PASS = os.environ.get("IMGFLIP_PASS", None)
+	IMGFLIP_USER=  os.environ.get("IMGFLIP_USER", None)
