@@ -19,36 +19,10 @@ class TestCog(CogMixin):
     def __init__(self, bot):
     	self.bot = bot
 
-    # Commands
-
     @commands.command(name="helloworld", pass_context=True)
     async def do_thing(self, ctx):
         """Simple 'say' command"""
         await ctx.bot.say("Hello, it's me again.")
-
-    # Events
-
-
-    async def on_message(self, message: Message):
-        """Called when a message is created and sent to a server."""
-        pass
-
-    async def on_channel_update(self, before: Channel, after: Channel):
-        """Called whenever a channel is updated. e.g. changed name, topic, permissions."""
-        msg = "Channel changed name from {0} to {1}".format(before.name, after.name)
-        await self.bot.send_message(after, msg)
-
-    async def on_member_update(self, before: Member, after: Member):
-        """Called when a Member updates their profile."""
-        pass
-
-    async def on_server_role_update(self, before: Role, after: Role):
-        """Called when a Role is changed server-wide."""
-        pass
-
-    async def on_voice_state_update(self, before: Member, after: Member):
-        """Called when a Member changes their voice state."""
-        pass
 
 def setup(bot):
     bot.add_cog(TestCog(bot))
