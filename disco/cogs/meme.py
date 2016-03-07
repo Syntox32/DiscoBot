@@ -3,7 +3,9 @@
 import logging, random, json
 import asyncio, aiohttp
 
+from disco.utils import try_embed_image
 from disco.config import Config
+
 from discord import Message, Channel, Member, Server, Role
 from discord.ext import commands
 
@@ -35,9 +37,10 @@ class Meme:
             }
 
             success = False
-            async with aiohttp.post(url, data=payload) as resp:
-                resp_json = await resp.json()
-                success = resp_json["success"]
+            with aiohttp.ClientSession() as session:
+                async with session.post(url, data=payload) as resp:
+                    resp_json = await resp.json()
+                    success = resp_json["success"]
             if success:
                 return resp_json["data"]["url"]
             else:
@@ -46,6 +49,21 @@ class Meme:
             logger.error("[Meme] Error fetching meme, lol: {}".format(e))
 
         return None
+
+    @commands.command(pass_context=True)
+    async def memelist(self, ctx):
+        """Whispers a list of all memes"""
+        meme_format = "```\n{}\n```"
+        max_chars = 2000
+        meme_str = ""
+        whisper = lambda: self.bot.whisper(meme_format.format(meme_str))
+        for k in sorted(memes, key=memes.get):
+            item = lambda x: "{0}: {1}\n".format(x.ljust(8), memes[x])
+            if len(meme_format.format(meme_str + item(k))) >= max_chars:
+                    await whisper()
+                    meme_str = item(k)
+            meme_str += item(k)
+        await whisper()
 
     @commands.command(pass_context=True, no_pm=True)
     async def meme(self, ctx, *args : str):
@@ -67,7 +85,9 @@ class Meme:
         if new_hot_meme is not None:
             logger.info("[Meme] A new hot meme was made(author: {0}, url: {1})"
             .format(ctx.message.author.name, new_hot_meme))
-            await self.bot.say(new_hot_meme)
+            #await self.bot.say(new_hot_meme)
+            # embed the image in the chat using send_file
+            await try_embed_image(self.bot, ctx, new_hot_meme)
         else:
             logger.error("[Meme] The new meme was not so hot(author: {0}, url: {1})"
             .format(ctx.message.author.name, new_hot_meme))
