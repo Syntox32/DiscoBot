@@ -21,11 +21,10 @@ class Meme:
         if missing:
             raise AttributeError("Missing credentials.")
 
-    async def _make_request(self, top: str, bot: str, id=None):
-        meme_id = id
+    async def _make_request(self, top: str, bot: str, meme_id=None):
+        """Make a dank request for a hot meme"""
         if meme_id is None:
             meme_id = random.sample(memes.keys(), 1)[0]
-
         try:
             url = "https://api.imgflip.com/caption_image"
             payload = {
@@ -76,7 +75,7 @@ class Meme:
         has_id_args = len(args) == 3
 
         if is_valid and has_id_args:
-            new_hot_meme = await self._make_request(args[0], args[1], args[2])
+            new_hot_meme = await self._make_request(args[1], args[2], args[0])
         elif is_valid:
             new_hot_meme = await self._make_request(args[0], args[1])
         else:
