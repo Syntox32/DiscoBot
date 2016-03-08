@@ -48,7 +48,7 @@ wisdom = [
 "Most likely",
 "Yes",
 "Signs point to yes",
-"BY THE GODS, YES!"
+"BY THE GODS, YES!",
 
 "Don't count on it",
 "My reply is no",
