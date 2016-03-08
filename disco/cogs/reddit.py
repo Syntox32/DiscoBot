@@ -20,9 +20,18 @@ class Reddit:
         # lol u sick nerds
         self.blacklist = ["ttotm", "spacedicks", "rule34", "incest", "rule34lol"]
 
+    @commands.command(pass_context=True, no_pm=True)
+    async def booty(self, ctx):
+        """A pirates best friend"""
+        await self.get_hot(ctx, "ass")
+
     @commands.command(pass_context=True, no_pm=True, aliases=["reddit", "r"])
     async def hot(self, ctx, *args: str):
         """Get hot images from a subreddit"""
+        await self.get_hot(ctx, *args)
+
+    async def get_hot(self, ctx, *args: str):
+        """Get a hot image from a subreddit"""
         sub = None
         lim = 25
         if len(args) == 1:

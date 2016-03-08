@@ -121,12 +121,10 @@ async def debug(ctx, *, code : str):
 	await bot.say(python.format(result))
 
 @bot.event
-async def on_command_error(error, ctx: Context):
+async def on_command_error(error, ctx):
 	"""Called when a command raises an error"""
-
 	if isinstance(error, commands.NoPrivateMessage):
-		await bot.send_message(ctx.message.author,
-		"This command cannot be used in private messages.")
+		await ctx.bot.say("This command cannot be used in private messages.")
 
 # Other events, uncomment as needed
 # Having them uncommented all the time might
