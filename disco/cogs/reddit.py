@@ -4,6 +4,7 @@ import logging, random, json
 import praw
 
 from disco.config import Config
+from disco.utils import try_embed_image
 from discord import Message, Channel, Member, Server, Role
 from discord.ext import commands
 
@@ -66,7 +67,8 @@ class Reddit:
             if random_sub_url.endswith(".webm") and "imgur" in random_sub_url:
                 random_sub_url = random_sub_url.replace(".webm", ".gifv")
 
-            await self.bot.say(random_sub_url)
+            #await self.bot.say(random_sub_url)
+            await try_embed_image(self.bot, ctx, random_sub_url)
         except praw.errors.InvalidSubreddit as e:
             await self.bot.say("That subreddit doesn't exist, you perv.")
         except Exception as e:
