@@ -62,7 +62,7 @@ extensions = [
 	"disco.cogs.misc"
 ]
 
-bot = DiscoBot(command_prefix=["!", "?", "$"], description=desc)
+bot = DiscoBot(command_prefix=["!", "?", "$", "+", ".", "-"], description=desc)
 bot.register_extensions(extensions)
 
 @bot.event
