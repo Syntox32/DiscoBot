@@ -74,6 +74,8 @@ async def on_ready():
 	logger.info("ID: {0}".format(bot.user.id))
 
 	bot.commands_executed = 0
+	bot.verbose = True if Config.LOGGING_LEVEL is logging.DEBUG else False
+	logger.info("High verbosity set to {}".format(str(bot.verbose)))
 
 @bot.event
 async def on_command(command, ctx: Context):
@@ -91,15 +93,29 @@ async def on_message(message: Message):
 	# any other on_message events to fire
 	await bot.process_commands(message)
 
-@bot.command(pass_context=True)
+@bot.command(pass_context=True, no_pm=True)
 async def id(ctx):
 	"""Send a message with the user id of the author."""
 	await bot.say("Your user ID is: {0}".format(ctx.message.author.id))
 
-@bot.command(pass_context=True)
+@bot.command(pass_context=True, hidden=True)
 @checks.is_owner()
-async def whoami(ctx):
-	await bot.say("You're the owner!")
+async def verbose(ctx):
+	"""Toggle logging level between info and debug."""
+	if bot.verbose:
+		logger.setLevel(logging.INFO)
+		bot.verbose = False
+		await bot.say("Set log verbosity to INFO.")
+	else:
+		logger.setLevel(logging.DEBUG)
+		bot.verbose = True
+		await bot.say("Set log verbosity to DEBUG.")
+
+@bot.command(pass_context=True, hidden=True, aliases=["quit"])
+@checks.is_owner()
+async def shutdown(ctx):
+	bot.say("Sutting down.")
+	await bot.logout()
 
 @bot.command(pass_context=True, hidden=True)
 @checks.is_owner()
