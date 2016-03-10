@@ -74,7 +74,7 @@ class Tag:
         content = " ".join(args[1:])
         await self.addtag(ctx, name, content)
 
-    @commands.command(pass_context=True, no_pm=True)
+    @commands.command(pass_context=True, no_pm=True, aliases=["listtags", "tags"])
     async def taglist(self, ctx):
         """List all tags registered on this server"""
         if self.need_reload:
@@ -85,11 +85,11 @@ class Tag:
             await self.bot.say("There are no tags on this server.")
             return None
         tags = self.json[chn_id]
-
         ret = ""
         for tagname in tags:
-            ret += tagname + "\n"
-        await self.bot.say("**I have these tags registered:**\n```{}```".format(ret))
+            name = tagname # or else 'tagname' would not update wtf?
+            ret += "`{}`\n".format(name)
+        await self.bot.say("**I have these tags registered:**\n{}".format(ret))
 
 def setup(bot):
     bot.add_cog(Tag(bot))
