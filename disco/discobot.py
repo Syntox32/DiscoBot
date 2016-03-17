@@ -61,6 +61,7 @@ extensions = [
 	"disco.cogs.reddit",
 	"disco.cogs.misc",
 	"disco.cogs.tags",
+	"disco.cogs.mood",
 ]
 
 bot = DiscoBot(command_prefix=["!", "?", "$", "+", ".", "-"], description=desc)
