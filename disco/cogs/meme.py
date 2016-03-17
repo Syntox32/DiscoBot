@@ -2,6 +2,7 @@
 
 import logging, random, json
 import asyncio, aiohttp
+import markovify
 
 from disco.utils import try_embed_image
 from disco.config import Config
@@ -49,6 +50,42 @@ class Meme:
 
         return None
 
+    def de_mention(self, msg):
+        """Make sure nobody is bothered"""
+        ret = msg.content
+        for m in msg.mentions:
+            ret = ret.replace(m.id, m.name)
+        return ret
+
+    def get_sentence_or_timeout(self, model, limit=140):
+        """get sentence or something"""
+        get_sentence = lambda: model.make_short_sentence(limit).lower()
+        return get_sentence()
+
+    async def get_model(self, ctx):
+        """Get a text model from the previous logs"""
+        content = []
+        me = ctx.message.server.me if ctx.message.channel.is_private else self.bot.user
+        async for entry in self.bot.logs_from(ctx.message.channel, limit=1000):
+            if entry.author != me:
+                avoid = self.bot.command_prefix
+                avoid.extend(["http"])
+                if not any(True for pre in avoid if entry.content.startswith(pre)):
+                #if not entry.content.startswith():
+                    content.append(self.de_mention(entry))
+        text_model = markovify.Text(" ".join(content), state_size=1)
+        return text_model
+
+    @commands.command(pass_context=True, no_pm=True, hidden=True)
+    async def automeme(self, ctx):
+        """WIP auto-meme-generation using chat logs and markov chains."""
+        text_model = await self.get_model(ctx)
+        char_lim = 140
+        text = self.get_sentence_or_timeout(text_model, limit=char_lim)
+        #for _ in range(random.randint(0, 10)):
+        text2 = self.get_sentence_or_timeout(text_model, limit=char_lim)
+        await self._meme(ctx, random.choice([text, "tfw", "mrw", "mfw"]), text2)
+
     @commands.command(pass_context=True)
     async def memelist(self, ctx):
         """Whispers a list of all memes"""
@@ -68,8 +105,12 @@ class Meme:
     async def meme(self, ctx, *args : str):
         """Post a hot meme with top and bottom text.
 
-            ex.: !meme <id>(optional) "top" "bot"
+        ex.: !meme <id>(optional) "top" "bot"
         """
+        await self._meme(ctx, *args)
+
+    async def _meme(self, ctx, *args : str):
+        """Make a meme"""
         new_hot_meme = None
         is_valid = len(args) == 2 or len(args) == 3
         has_id_args = len(args) == 3
