@@ -62,7 +62,7 @@ class Tag:
         tag = tags[tagname]
         await self.bot.say(tag)
 
-    @commands.command(name="tag", pass_context=True, no_pm=True)
+    @commands.command(name="tag", pass_context=True, no_pm=True, aliases=["t"])
     async def _gettag(self, ctx, name : str):
         """Return the contents of a given tag"""
         await self.gettag(ctx, name)
