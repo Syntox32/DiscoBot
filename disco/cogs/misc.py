@@ -3,7 +3,7 @@
 import logging, random, json
 
 from disco.config import Config
-from discord import Message, Channel, Member, Server, Role
+from discord import Message, Channel, Member, Server, Role, Game
 from discord.ext import commands
 
 logger = logging.getLogger("disco")
@@ -13,6 +13,13 @@ class Misc:
     def __init__(self, bot):
         self.bot = bot
         self.key = self.__class__.__name__
+
+    async def set_random_game(self):
+        random_game = random.choice(games)
+        await self.bot.change_status(Game(name=random_game))
+
+    async def on_ready(self):
+        await self.set_random_game()
 
     async def on_message(self, message: Message):
         """lol"""
@@ -96,4 +103,13 @@ responses = [
 "That's my boy",
 "Nice to see you too",
 "Easy on the language, kid"
+]
+
+# Playing...
+games = [
+	"alone",
+	"with your mom",
+	"russian roulette",
+	"with himself",
+	"the game",
 ]
