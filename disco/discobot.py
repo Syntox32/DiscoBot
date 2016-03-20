@@ -102,6 +102,15 @@ async def id(ctx):
 
 @bot.command(pass_context=True, hidden=True)
 @checks.is_owner()
+async def change_game_status(ctx, game : str):
+	"""Change the playing status to a given label"""
+	# if the name is equal to None, the playing status is removed
+	if game == "":
+		game = None
+	await ctx.bot.change_status(discord.Game(name=game))
+
+@bot.command(pass_context=True, hidden=True)
+@checks.is_owner()
 async def verbose(ctx):
 	"""Toggle logging level between info and debug."""
 	if bot.verbose:
