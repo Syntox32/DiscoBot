@@ -57,7 +57,7 @@ class Meme:
             ret = ret.replace(m.id, m.name)
         return ret
 
-    def get_sentence_or_timeout(self, model, limit=140):
+    def get_sentence(self, model, limit=140):
         """get sentence or something"""
         get_sentence = lambda: model.make_short_sentence(limit).lower()
         return get_sentence()
@@ -81,9 +81,8 @@ class Meme:
         """WIP auto-meme-generation using chat logs and markov chains."""
         text_model = await self.get_model(ctx)
         char_lim = 140
-        text = self.get_sentence_or_timeout(text_model, limit=char_lim)
-        #for _ in range(random.randint(0, 10)):
-        text2 = self.get_sentence_or_timeout(text_model, limit=char_lim)
+        text = self.get_sentence(text_model, limit=char_lim)
+        text2 = self.get_sentence(text_model, limit=char_lim)
         await self._meme(ctx, random.choice([text, "tfw", "mrw", "mfw"]), text2)
 
     @commands.command(pass_context=True)
