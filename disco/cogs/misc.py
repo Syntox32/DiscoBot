@@ -112,4 +112,6 @@ games = [
 	"russian roulette",
 	"with himself",
 	"the game",
+    "with your feellings",
+    "forces beyond you"
 ]
