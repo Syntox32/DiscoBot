@@ -61,15 +61,19 @@ def configure_logger(name=__name__, stream=True, level=logging.INFO):
     loginst.setLevel(logging.INFO if level is None else level)
 
     path = os.path.abspath(name + ".log")
-    fhnd = logging.FileHandler(path, "w", "utf-8")
+    #fhnd = logging.FileHandler(path, "w", "utf-8")
     shnd = logging.StreamHandler()
+    rhnd = logging.RotatingFileHandler(path, mode="a", maxBytes=10000000,
+        backupCount=10, encoding="utf-8")
 
     log_fmt = "%(asctime)s::%(name)s [%(levelname)s]: %(message)s"
     fmt = logging.Formatter(log_fmt) # if log_format is None else log_format)
-    fhnd.setFormatter(fmt)
+    #fhnd.setFormatter(fmt)
     shnd.setFormatter(fmt)
+    rhnd.setFormatter(fmt)
 
-    loginst.addHandler(fhnd)
+    #loginst.addHandler(fhnd)
+    loginst.addHandler(rhnd)
     if stream: loginst.addHandler(shnd)
 
     return loginst
