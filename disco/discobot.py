@@ -29,6 +29,8 @@ class DiscoBot(commands.Bot):
 		if missing:
 			raise AttributeError("Missing credentials.")
 
+		self.lockdown = False
+
 	def go(self):
 		"""Go, go, go"""
 		self.run(Config.DISCORD_EMAIL, Config.DISCORD_PASS)
@@ -91,6 +93,11 @@ async def on_command(command, ctx: Context):
 async def on_message(message: Message):
 	"""Called when a message is created and sent to a server."""
 
+	# If we're in lockdown, just answer to the owner
+	if bot.lockdown:
+		if message.author.id != Config.OWNER_ID:
+			return
+
 	# if we override the on message we need to
 	# make sure the bot sees the message if we want
 	# any other on_message events to fire
@@ -114,6 +121,16 @@ async def change_game_status(ctx, game : str):
 	if game == "":
 		game = None
 	await ctx.bot.change_status(discord.Game(name=game))
+
+@bot.command(name="lockdown", pass_context=True, hidden=True)
+@checks.is_owner()
+async def _lockdown(ctx):
+	"""Locks down the bot to only respond to commands from the owner"""
+	bot.lockdown = not bot.lockdown
+	if bot.lockdown:
+		await bot.say("I'm now in lockdown mode.")
+	else:
+		await bot.say("I'm now out of lockdown mode.")
 
 @bot.command(pass_context=True, hidden=True)
 @checks.is_owner()
