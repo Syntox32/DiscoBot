@@ -21,7 +21,7 @@ class Tag:
 
     async def load(self):
         try:
-            with open(self.key + ".json", "r") as f:
+            with open(self.key + ".json", "r", encoding="utf-8") as f:
                 self.json = json.load(f)
         except:
             logger.warning("There isn't a tag.json file yet on this server.")
@@ -29,7 +29,7 @@ class Tag:
 
     async def save(self):
         def dump():
-            with open(self.key + ".json", "w") as f:
+            with open(self.key + ".json", "w", encoding="utf-8") as f:
                 json.dump(self.json, f)
         await self.loop.run_in_executor(None, dump)
 
@@ -39,19 +39,19 @@ class Tag:
             self.bot.say("The tagname cannot contain spaces.")
             return None
 
-        chn_id = str(ctx.message.channel.id)
+        chn_id = str(ctx.message.server.id)
         if chn_id not in self.json:
             self.json.update({chn_id: {}})
 
-        self.json[chn_id].update({tagname: value})
+        self.json[chn_id].update({tagname: {"content": value, "author": ctx.message.author.name}})
         await self.save()
-        logger.debug("[tag] added tag (name: {0}, value: {1})".format(tagname, value))
+        logger.debug("[tag] added tag (name: {0}, value: {1}, author: {2})".format(tagname, value, ctx.message.author.name))
 
     async def gettag(self, ctx, tagname : str):
         if self.need_reload:
             await self.load()
             self.need_reload = False
-        chn_id = str(ctx.message.channel.id)
+        chn_id = str(ctx.message.server.id)
         if chn_id not in self.json:
             await self.bot.say("I couldn't find that tag on this server.")
             return None
@@ -59,7 +59,7 @@ class Tag:
         if tagname not in tags:
             await self.bot.say("I couldn't find that tag.")
             return None
-        tag = tags[tagname]
+        tag = tags[tagname]["content"]
         await self.bot.say(tag)
 
     @commands.command(name="tag", pass_context=True, no_pm=True, aliases=["t"])
@@ -80,7 +80,7 @@ class Tag:
         if self.need_reload:
             await self.load()
             self.need_reload = False
-        chn_id = str(ctx.message.channel.id)
+        chn_id = str(ctx.message.server.id)
         if chn_id not in self.json:
             await self.bot.say("There are no tags on this server.")
             return None
