@@ -5,6 +5,7 @@ Utillity class with things
 
 import os, io, logging
 import asyncio, aiohttp
+import logging.handlers
 
 from discord import Message
 from discord.ext import commands
@@ -63,7 +64,7 @@ def configure_logger(name=__name__, stream=True, level=logging.INFO):
     path = os.path.abspath(name + ".log")
     #fhnd = logging.FileHandler(path, "w", "utf-8")
     shnd = logging.StreamHandler()
-    rhnd = logging.RotatingFileHandler(path, mode="a", maxBytes=10000000,
+    rhnd = logging.handlers.RotatingFileHandler(path, mode="a", maxBytes=10000000,
         backupCount=10, encoding="utf-8")
 
     log_fmt = "%(asctime)s::%(name)s [%(levelname)s]: %(message)s"
