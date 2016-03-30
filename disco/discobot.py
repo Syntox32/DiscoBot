@@ -3,7 +3,7 @@
 DiscoBot the Amazing Chat Companion
 """
 
-import logging
+import logging, json
 from disco import checks
 from .config import Config
 from .utils import configure_logger, get_destination
@@ -63,6 +63,7 @@ extensions = [
 	"disco.cogs.tags",
 	"disco.cogs.mood",
 	"disco.cogs.music",
+#	"disco.cogs.played",
 ]
 
 bot = DiscoBot(command_prefix=["!", "?", "$", "+", ".", "-"], description=desc)
@@ -99,6 +100,11 @@ async def on_message(message: Message):
 async def id(ctx):
 	"""Send a message with the user id of the author."""
 	await bot.say("Your user ID is: {0}".format(ctx.message.author.id))
+
+@bot.command(pass_context=True, no_pm=True, hidden=True)
+async def servid(ctx):
+	"""Send a message with the user id of the author."""
+	await bot.say("This server ID is: {0}".format(ctx.message.server.id))
 
 @bot.command(pass_context=True, hidden=True)
 @checks.is_owner()
@@ -147,6 +153,18 @@ async def debug(ctx, *, code : str):
 		result = await result
 
 	await bot.say(python.format(result))
+
+@bot.command(pass_context=True, no_pm=True, hidden=True)
+@checks.is_owner()
+async def rescue(ctx, count : int):
+	"""Saves the the last n messages from the log in a file"""
+	with open("shitsave.txt", "w") as f:
+		async for message in bot.logs_from(ctx.message.channel, limit=count):
+			obj = {
+				"auth": message.author.name,
+				"msg": message.content
+			}
+			f.write(json.JSONEncoder().encode(obj)+ "\n")
 
 @bot.event
 async def on_command_error(error, ctx):
