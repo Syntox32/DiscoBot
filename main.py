@@ -7,7 +7,7 @@ Built using Rapptz's Discord API wrapper
 Which can be found here: github.com/Rapptz/discord.py
 """
 
-import asyncio, logging, argparse
+import asyncio, logging, argparse, os
 from disco.discobot import bot
 from discord.ext import commands
 
@@ -27,21 +27,24 @@ async def command_listener(bot: commands.Bot):
             break
 
 if __name__ == "__main__":
-	"""
-	Main entry point.
-	"""
-	parser = argparse.ArgumentParser(description="Disco the Amazing Chat Companion!")
-	parser.add_argument("-i", "--interactive", action="store_true",
-		help="Starts DiscoBot in interactive mode, for your needs and purposes." \
-		+ "Blocks other output from showing.")
-	args = parser.parse_args()
-	loop = asyncio.get_event_loop()
+    """
+    Main entry point.
+    """
+    parser = argparse.ArgumentParser(description="Disco the Amazing Chat Companion!")
+    parser.add_argument("-i", "--interactive", action="store_true",
+        help="Starts DiscoBot in interactive mode, for your needs and purposes." \
+        + "Blocks other output from showing.")
+    args = parser.parse_args()
 
-	try:
-		if args.interactive:
-			loop.create_task(command_listener(bot))
-		loop.run_until_complete(bot.go())
-	except Exception as e:
-		loop.run_until_complete(bot.logout())
-	finally:
-		loop.close()
+    #loop = asyncio.get_event_loop()
+
+    bot.run(os.environ.get("DISCOBOT_TOKEN", None))
+
+    #try:
+    #	if args.interactive:
+    #		loop.create_task(command_listener(bot))
+    #	loop.run_until_complete(bot.run(os.environ.get("DISCOBOT_TOKEN", None)))
+    #except Exception as e:
+    #	loop.run_until_complete(bot.logout())
+    #finally:
+    #	loop.close()

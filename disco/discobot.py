@@ -19,32 +19,33 @@ configure_logger("discord", stream=False, level=Config.LOGGING_LEVEL)
 logger = logging.getLogger("disco")
 
 
-class DiscoBot(commands.Bot):
-	"""DiscoBot the Amazing Chat Companion"""
-
-	def __init__(self, *args, **kwargs):
-		super().__init__(*args, **kwargs)
-
-		missing_token = Config.DISCORD_TOKEN is None
-		if missing_token:
-			raise AttributeError("Missing token.")
-
-		self.lockdown = False
-
-	async def go(self):
-		"""Go, go, go"""
-		logger.debug(Config.DISCORD_TOKEN)
-		self.run(Config.DISCORD_TOKEN)
-
-	def register_extensions(self, extension: [str]):
-		"""Register the required cogs"""
-		logger.info("Loading extension...")
-		try:
-			for ext in extensions:
-				logger.info(" loaded cog: {0}".format(ext))
-				self.load_extension(ext)
-		except Exception as e:
-			logger.error("Error loading extension \'{0}\': {1}".format(ext, e))
+#class DiscoBot(commands.Bot):
+#	"""DiscoBot the Amazing Chat Companion"""
+#
+#	def __init__(self, *args, **kwargs):
+#		super().__init__(*args, **kwargs)
+#
+#		missing_token = Config.DISCORD_TOKEN is None
+#		if missing_token:
+#			raise AttributeError("Missing token.")
+#
+#		self.lockdown = False
+#
+#	#async def go(self):
+#	#	"""Go, go, go"""
+#		#logger.debug(Config.DISCORD_TOKEN)
+#		#await self.login(Config.DISCORD_TOKEN)
+#	#	super().run()
+#
+#	def register_extensions(self, extension: [str]):
+#		"""Register the required cogs"""
+#		logger.info("Loading extension...")
+#		try:
+#			for ext in extensions:
+#				logger.info(" loaded cog: {0}".format(ext))
+#				self.load_extension(ext)
+#		except Exception as e:
+#			logger.error("Error loading extension \'{0}\': {1}".format(ext, e))
 
 
 desc = """Disco the Amazing Chat Companion.
@@ -66,11 +67,26 @@ extensions = [
 	"disco.cogs.tags",
 	"disco.cogs.mood",
 	"disco.cogs.music",
-#	"disco.cogs.played",
 ]
 
-bot = DiscoBot(command_prefix=["!", "?", "$", "+", ".", "-"], description=desc)
-bot.register_extensions(extensions)
+if Config.DISCORD_TOKEN is None:
+	raise AttributeError("Missing token.")
+
+bot = commands.Bot(command_prefix=["!", "?"], description=desc)
+bot.lockdown = False
+
+def register_extensions(extension: [str]):
+	"""Register the required cogs"""
+	logger.info("Loading extension...")
+	try:
+		for ext in extensions:
+			logger.info(" loaded cog: {0}".format(ext))
+			bot.load_extension(ext)
+	except Exception as e:
+		logger.error("Error loading extension \'{0}\': {1}".format(ext, e))
+
+register_extensions(extensions)
+
 
 @bot.event
 async def on_ready():
