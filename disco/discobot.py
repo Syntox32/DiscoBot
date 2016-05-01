@@ -35,12 +35,15 @@ class DiscoBot(commands.Bot):
 
 		self.lockdown = False
 
-	def go(self):
+	async def go(self):
 		"""Go, go, go"""
 		if not self.missing_token:
-			self.run(Config.DISCORD_TOKEN)
+			#self.run(Config.DISCORD_TOKEN
+			yield from self.login(Config.DISCORD_TOKEN)
+			yield from self.connect()
 		else:
-			self.run(Config.DISCORD_EMAIL, Config.DISCORD_PASS)
+			yield from self.login(Config.DISCORD_EMAIL, Config.DISCORD_PASS)
+			yield from self.connect()
 
 	def register_extensions(self, extension: [str]):
 		"""Register the required cogs"""
