@@ -30,7 +30,7 @@ class DiscoBot(commands.Bot):
 			logger.warning("No OAuth2 token found, using email/password instead.")
 
 		missing = Config.DISCORD_EMAIL is None or Config.DISCORD_PASS is None
-		if missing:
+		if missing and self.missing_token:
 			raise AttributeError("Missing credentials.")
 
 		self.lockdown = False
