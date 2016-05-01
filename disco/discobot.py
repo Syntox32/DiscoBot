@@ -27,20 +27,13 @@ class DiscoBot(commands.Bot):
 
 		missing_token = Config.DISCORD_TOKEN is None
 		if missing_token:
-			logger.critical("No token found.")
-
-		missing_id = Config.DISCORD_ID is None
-		if missing_id:
-			logger.critical("No client ID found.")
-
-		if missing_token or missing_id:
-			raise AttributeError("Missing credentials.")
+			raise AttributeError("Missing token.")
 
 		self.lockdown = False
 
 	async def go(self):
 		"""Go, go, go"""
-		self.client_id = Config.DISCORD_ID
+		logger.debug(Config.DISCORD_TOKEN)
 		self.run(Config.DISCORD_TOKEN)
 
 	def register_extensions(self, extension: [str]):

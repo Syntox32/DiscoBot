@@ -12,7 +12,6 @@ class Config:
 
 	# Discord login
 	DISCORD_TOKEN = os.environ.get("DISCOBOT_TOKEN", None)
-	DISCORD_ID = os.environ.get("DISCOBOT_ID", None)
 
 	# Imgflip login, used by `plugins/meme.py`
 	# If these are not the the plugin will just be disabled
