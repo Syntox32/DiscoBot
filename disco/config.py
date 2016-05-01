@@ -11,6 +11,7 @@ class Config:
 	LOGGING_FORMAT = "%(asctime)s::%(name)s [%(levelname)s]: %(message)s"
 
 	# Discord login
+	DISCORD_TOKEN = os.environ.get("DISCOBOT_TOKEN", None)
 	DISCORD_EMAIL = os.environ.get("DISCOBOT_EMAIL", None)
 	DISCORD_PASS = os.environ.get("DISCOBOT_PASS", None)
 

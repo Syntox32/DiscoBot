@@ -25,6 +25,10 @@ class DiscoBot(commands.Bot):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
+		self.missing_token = Config.DISCORD_TOKEN is None
+		if self.missing_token:
+			logger.warning("No OAuth2 token found, using email/password instead.")
+
 		missing = Config.DISCORD_EMAIL is None or Config.DISCORD_PASS is None
 		if missing:
 			raise AttributeError("Missing credentials.")
@@ -33,7 +37,10 @@ class DiscoBot(commands.Bot):
 
 	def go(self):
 		"""Go, go, go"""
-		self.run(Config.DISCORD_EMAIL, Config.DISCORD_PASS)
+		if not self.missing_token:
+			self.run(Config.DISCORD_TOKEN)
+		else:
+			self.run(Config.DISCORD_EMAIL, Config.DISCORD_PASS)
 
 	def register_extensions(self, extension: [str]):
 		"""Register the required cogs"""

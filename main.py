@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """
 Disco the Amazing Chat Companion!
-By Syntox <github.com/syntox32> - I'm also on Discord @syn
+By Syntox <github.com/syntox32> - I'm also on Discord @syn#1389
 
 Built using Rapptz's Discord API wrapper
 Which can be found here: github.com/Rapptz/discord.py
