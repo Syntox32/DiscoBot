@@ -1,28 +1,16 @@
+
 # DiscoBot
 A small pluggable bot for Discord using [discord.py](https://github.com/Rapptz/discord.py).
 
 If you have no clue what Discord is you can go here: https://discordapp.com/
 
-## Features
-
-Something something useful text
-
-## Extending functionality
-
-Some text to come here soon
-
-## Credentials
-
-Credentials are set through environment variables.
-
-Name | Value | Type | Plugin
---- | --- | --- | ---
-**DISCOBOT_EMAIL** | Discord email | Required |
-**DISCOBOT_PASS** | Discord password | Required |
-**IMGFLIP_USER** | [ImgFlip](https://imgflip.com/) username | Optional | meme.py
-**IMGFLIP_PASS** | [ImgFlip](https://imgflip.com/) password | Optional | meme.py
 
 ## Installation
+
+```
+<install python3.5>
+sudo apt-get install libffi-dev python3.5-dev supervisor python-virtualenv
+```
 
 Linux is currently the only tested environment.
 
