@@ -16,7 +16,12 @@ class Reddit:
         self.bot = bot
         self.key = self.__class__.__name__
 
-        self.reddit = praw.Reddit(user_agent="disco-the-amazing-chat-companion")
+        self.reddit = praw.Reddit(client_id=Config.R_ID,
+                                    client_secret=Config.R_TOK,
+                                    password=Config.R_SEC,
+                                    username=Config.R_USR,
+                                    user_agent="disco the chat companion")
+        logger.debug("reddit: user authenticated as: {}".format(self.reddit.user.me()))
 
         # lol u sick nerds
         self.blacklist = ["ttotm", "spacedicks", "rule34", "incest", "rule34lol"]
@@ -24,7 +29,7 @@ class Reddit:
     @commands.command(pass_context=True, no_pm=True)
     async def booty(self, ctx):
         """A pirates best friend"""
-        await self.get_post(ctx, "ass")
+        await self.get_post(ctx, "ass", "hot")
 
     @commands.command(pass_context=True, no_pm=True)
     async def top(self, ctx, *args: str):
@@ -37,39 +42,19 @@ class Reddit:
 
             e.g.: !top aww a
         """
-        content_predicate = None
+        #content_predicate = None
         top_from = "a" # all
         limit = 25
         subreddit = args[0]
         # if we get two arguments, the first is the
         # subreddit and the second is the typ of 'top'
         if len(args) == 2:
-            top_from = str(args[1])
-            if top_from == "a": # all time
-                logger.debug("predicate set to {}".format(top_from))
-                content_predicate = lambda x: x.get_top_from_all(limit=limit)
-            elif top_from == "d": # day
-                content_predicate = lambda x: x.get_top_from_day(limit=limit)
-                logger.debug("predicate set to {}".format(top_from))
-            elif top_from == "h": # hour
-                content_predicate = lambda x: x.get_top_from_hour(limit=limit)
-                logger.debug("predicate set to {}".format(top_from))
-            elif top_from == "m": # month
-                content_predicate = lambda x: x.get_top_from_month(limit=limit)
-                logger.debug("predicate set to {}".format(top_from))
-            elif top_from == "w": # week
-                content_predicate = lambda x: x.get_top_from_week(limit=limit)
-                logger.debug("predicate set to {}".format(top_from))
-            elif top_from == "y": # year
-                content_predicate = lambda x: x.get_top_from_year(limit=limit)
-                logger.debug("predicate set to {}".format(top_from))
-            else:
-                await self.bot.say("There is no type of top named '{0}'. Type !help top for more info.".format(top_from))
+            top_filter = str(args[1])
+            await self.get_post(ctx, subreddit, top_filter)
         else:
             logger.debug("predicate set to {}".format(top_from))
-            content_predicate = lambda x: x.get_top_from_all(limit=limit)
-
-        await self.get_post(ctx, subreddit, predicate=content_predicate)
+            #content_predicate = lambda x: x.get_top_from_all(limit=limit)
+            await self.get_post(ctx, subreddit, "all")
 
     @commands.command(pass_context=True, no_pm=True)
     async def hot(self, ctx, *args: str):
@@ -83,9 +68,9 @@ class Reddit:
             lim = int(args[1])
         else:
             return # invalid number of arguments
-        await self.get_post(ctx, sub, lim)
+        await self.get_post(ctx, sub, "hot")
 
-    async def get_post(self, ctx, sub: str, limit=25, predicate=None):
+    async def get_post(self, ctx, sub: str, top_filter: str, limit=25):
         """Get a hot-or-top image from a subreddit
 
         `sub` is the name of the requested subreddit.
@@ -95,6 +80,7 @@ class Reddit:
 
             e.g.: lambda x: x.get_hot(limit=25) # will get the 25 last hot posts
         """
+        logger.debug("DEBUG FLAG 3")
         # blacklist check
         if sub in self.blacklist:
             await self.bot.say("That sub is blacklisted, you perv.")
@@ -102,12 +88,35 @@ class Reddit:
 
         try:
             submissions = []
-            subreddit_object = self.reddit.get_subreddit(sub)
-            if predicate is None:
-                submissions = [s for s in subreddit_object.get_hot(limit=limit)]
+            logger.debug(sub)
+            subreddit_object = self.reddit.subreddit(sub)
+            logger.debug(subreddit_object)
+
+            if top_filter is "hot":
+                generator = subreddit_object.hot()
+                for _ in range(limit): submissions.append(generator.next())
+                submissions = [s for s in subreddit_object.hot(limit=limit)]
+
             else: # get top submissions
                 logger.debug("[reddit] using submission_predicate")
-                submissions = [s for s in predicate(subreddit_object)]
+                logger.debug("reddit: subreddit filter set to \'{}\'".format(top_filter))
+
+                generator = None
+                if top_filter == "a" or top_filter == "all":
+                    generator = subreddit_object.top('all')
+                elif top_filter == "d" or top_filter == "day":
+                    generator = subreddit_object.top('day')
+                elif top_filter == "h" or top_filter == "hour":
+                    generator = subreddit_object.top('hour')
+                elif top_filter == "m" or top_filter == "month":
+                    generator = subreddit_object.top('month')
+                elif top_filter == "w" or top_filter == "week":
+                    generator = subreddit_object.top('week')
+                elif top_filter == "y" or top_filter == "year":
+                    generator = subreddit_object.top('year')
+
+                if generator is None: logger.debug("debug warning: generator was none")
+                for _ in range(limit): submissions.append(generator.next())
 
             # check if we have any submissions at all, for possible empty subreddits
             if len(submissions) == 0:
@@ -143,7 +152,7 @@ class Reddit:
         except praw.errors.InvalidSubreddit as e:
             await self.bot.say("That subreddit doesn't exist, you perv.")
         except Exception as e:
-            logger.warning("[Reddit] Error occured: {}".format(e))
+            logger.error("[Reddit] Error occured: {}".format(e))
 
 def setup(bot):
     bot.add_cog(Reddit(bot))
