@@ -1,0 +1,14 @@
+{
+  "_comment": "If this is 'false' the program will search for environment variables even if it can locate this file.",
+  "_use_me": true,
+
+  "token": "",
+
+  "imgflip_user": "",
+  "imgflip_pass": "",
+
+  "reddit_id": "",
+  "reddit_token": "",
+  "reddit_user": "",
+  "reddit_pass": "",
+}
