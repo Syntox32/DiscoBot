@@ -16,7 +16,7 @@ class Misc:
 
     async def set_random_game(self):
         random_game = random.choice(games)
-        await self.bot.change_status(Game(name=random_game))
+        await self.bot.change_presence(game=Game(name=random_game))
 
     async def on_ready(self):
         await self.set_random_game()

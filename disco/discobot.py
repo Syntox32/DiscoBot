@@ -137,7 +137,7 @@ async def change_game_status(ctx, game : str):
 	# if the name is equal to None, the playing status is removed
 	if game == "":
 		game = None
-	await ctx.bot.change_status(discord.Game(name=game))
+	await self.bot.change_presence(game=Game(name="game"))
 
 @bot.command(name="lockdown", pass_context=True, hidden=True)
 @checks.is_owner()
