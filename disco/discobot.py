@@ -66,7 +66,7 @@ extensions = [
 	"disco.cogs.misc",
 	"disco.cogs.tags",
 	"disco.cogs.mood",
-	"disco.cogs.music",
+#	"disco.cogs.music",
 ]
 
 if Config.DISCORD_TOKEN is None:
